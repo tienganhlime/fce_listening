@@ -32,12 +32,12 @@
         .wrong-answer { background-color: #FFCDD2 !important; border-color: #F44336 !important; }
 /* Tăng cỡ chữ options */
 label span {
-    font-size: 17px;
+    font-size: 20px;
 }
 /* Tăng cỡ chữ instructions */
 #instructions p,
 .text-sm {
-    font-size: 16px !important;
+    font-size: 20px !important;
 }
     </style>
 </head>
@@ -141,7 +141,7 @@ label span {
                     <span id="replayCount2" class="text-sm text-gray-600">Nghe lại: 0 lần</span>
                 </div>
                 <audio id="audio2" controls class="w-full mb-2">
-                    <source src="YOUR_AUDIO_PART2_URL_HERE" type="audio/mpeg">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1762504614/COMPLETE_FIRST_fS_WB_002_nclmm2.mp3" type="audio/mpeg">
                 </audio>
                 <div id="audioTime2" class="text-sm text-gray-600 text-center">00:00 / 00:00</div>
             </div>
@@ -185,7 +185,7 @@ label span {
                     <span id="replayCount4" class="text-sm text-gray-600">Nghe lại: 0 lần</span>
                 </div>
                 <audio id="audio4" controls class="w-full mb-2">
-                    <source src="YOUR_AUDIO_PART4_URL_HERE" type="audio/mpeg">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1762504586/COMPLETE_FIRST_fS_WB_003_cjuppq.mp3" type="audio/mpeg">
                 </audio>
                 <div id="audioTime4" class="text-sm text-gray-600 text-center">00:00 / 00:00</div>
             </div>
@@ -402,6 +402,12 @@ async function verifyStudent() {
         return;
     }
     
+    // Hiển thị loading
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> <span>Đang xác nhận mã...</span>';
+    
     try {
         const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=verify&code=${code}`);
         const data = await response.json();
@@ -416,13 +422,17 @@ async function verifyStudent() {
             loadLesson();
             startTime = new Date();
         } else {
-            alert('❌ Mã học sinh không tồn tại!');
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('❌ Mã học sinh không tồn tại!\n\n📞 Vui lòng liên hệ giáo viên để được hỗ trợ.');
         }
     } catch (error) {
-        alert('Lỗi kết nối! Vui lòng thử lại.');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        alert('⚠️ Lỗi kết nối!\n\n📞 Vui lòng kiểm tra Internet hoặc liên hệ giáo viên.');
+        console.error('Error:', error);
     }
 }
-
 // ========== TẢI BÀI HỌC ==========
 function loadLesson() {
     audio2 = document.getElementById('audio2');
