@@ -106,6 +106,7 @@
                 <div class="text-right">
                     <p class="text-sm text-gray-600">Học sinh: <span id="headerName"></span></p>
                     <p class="text-sm text-gray-600">Mã: <span id="headerCode"></span></p>
+                    <p class="text-sm text-gray-600">⏱️ Thời gian: <span id="timerDisplay">00:00</span></p>
                 </div>
             </div>
             
@@ -228,7 +229,7 @@
 
             <!-- Kết quả tổng quan -->
             <div class="bg-green-50 rounded-xl p-6 mb-6 border-2 border-green-200">
-                <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="grid grid-cols-4 gap-4 text-center">
                     <div>
                         <p class="text-gray-600">Điểm số</p>
                         <p id="resultScore" class="text-3xl font-bold text-green-700">0%</p>
@@ -238,8 +239,12 @@
                         <p id="resultCorrect" class="text-3xl font-bold text-green-700">0/12</p>
                     </div>
                     <div>
-                        <p class="text-gray-600">Thời gian</p>
+                        <p class="text-gray-600">Thời gian làm bài</p>
                         <p id="resultTime" class="text-2xl font-bold text-green-700">0 phút</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Tổng lần nghe lại</p>
+                        <p id="resultTotalReplays" class="text-2xl font-bold text-blue-700">0 lần</p>
                     </div>
                 </div>
             </div>
@@ -250,10 +255,10 @@
                 <p id="wrongList" class="text-red-700"></p>
             </div>
 
-            <!-- Thống kê nghe lại -->
+            <!-- Thống kê nghe lại CHI TIẾT -->
             <div class="bg-blue-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
-                <h3 class="font-bold text-blue-800 mb-2">🔄 Thống kê nghe lại:</h3>
-                <div id="resultReplayLog" class="text-blue-700 text-sm"></div>
+                <h3 class="font-bold text-blue-800 mb-3">🔄 Thống kê nghe lại chi tiết:</h3>
+                <div id="resultReplayLog" class="text-blue-700 text-sm space-y-2"></div>
             </div>
 
             <!-- Hiển thị lại toàn bộ bài làm -->
@@ -382,9 +387,11 @@ const correctAnswers = {
 let studentInfo = {};
 let answers = {};
 let startTime;
+let timerInterval;
+let elapsedSeconds = 0;
+
 let audio2 = null, audio4 = null;
 let lastPos2 = 0, lastPos4 = 0;
-let seekCount2 = 0, seekCount4 = 0;
 let replayLog2 = [], replayLog4 = [];
 
 // ========== XÁC THỰC HỌC SINH ==========
@@ -413,6 +420,7 @@ async function verifyStudent() {
             
             loadLesson();
             startTime = new Date();
+            startTimer();
         } else {
             btn.disabled = false;
             btn.innerHTML = originalText;
@@ -423,6 +431,27 @@ async function verifyStudent() {
         btn.innerHTML = originalText;
         alert('⚠️ Lỗi kết nối!\n\n📞 Vui lòng kiểm tra Internet hoặc liên hệ giáo viên.');
         console.error('Error:', error);
+    }
+}
+
+// ========== TIMER ==========
+function startTimer() {
+    timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById('timerDisplay').textContent = display;
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
     }
 }
 
@@ -571,17 +600,23 @@ function logReplay(partNum) {
     if (!audioEl || audioEl.currentTime === 0) return;
     
     const currentPos = audioEl.currentTime;
-    if (Math.abs(currentPos - lastPos) > 3) {
+    
+    // Kiểm tra nếu học sinh tua lại (seeking backward) hoặc tua tới quá xa (seeking forward > 3s)
+    const timeDiff = currentPos - lastPos;
+    
+    if (Math.abs(timeDiff) > 1) { // Nếu nhảy quá 1 giây thì ghi nhận
+        const logEntry = {
+            from: formatTime(lastPos),
+            to: formatTime(currentPos),
+            direction: timeDiff < 0 ? 'TUA LẠI' : 'TUA TỚI'
+        };
+        
         if (partNum === 2) {
-            seekCount2++;
-            const logEntry = `Part 2 - Lần ${seekCount2}: Từ ${formatTime(lastPos)} → ${formatTime(currentPos)}`;
             replayLog2.push(logEntry);
-            document.getElementById('replayCount2').textContent = `Nghe lại: ${seekCount2} lần`;
+            document.getElementById('replayCount2').textContent = `Nghe lại: ${replayLog2.length} lần`;
         } else {
-            seekCount4++;
-            const logEntry = `Part 4 - Lần ${seekCount4}: Từ ${formatTime(lastPos)} → ${formatTime(currentPos)}`;
             replayLog4.push(logEntry);
-            document.getElementById('replayCount4').textContent = `Nghe lại: ${seekCount4} lần`;
+            document.getElementById('replayCount4').textContent = `Nghe lại: ${replayLog4.length} lần`;
         }
     }
 }
@@ -599,6 +634,8 @@ async function submitTest() {
     if (unanswered > 0) {
         if (!confirm(`Bạn còn ${unanswered} câu chưa trả lời. Nộp bài?`)) return;
     }
+    
+    stopTimer();
     
     if (audio2) audio2.pause();
     if (audio4) audio4.pause();
@@ -623,13 +660,26 @@ async function submitTest() {
     });
 
     const totalScore = Math.round((correctCount / 12) * 100);
-    const endTime = new Date();
-    const timeUsed = Math.round((endTime - startTime) / 60000);
+    const timeUsedMinutes = Math.floor(elapsedSeconds / 60);
+    const timeUsedSeconds = elapsedSeconds % 60;
+    const timeUsedDisplay = `${timeUsedMinutes}p ${timeUsedSeconds}s`;
     
-    const allReplayLogs = [...replayLog2, ...replayLog4];
-    const totalReplayCount = seekCount2 + seekCount4;
+    // Format replay logs chi tiết
+    const formatReplayLogs = (logs, partName) => {
+        if (logs.length === 0) return [];
+        return logs.map((log, idx) => 
+            `${partName} - Lần ${idx + 1}: ${log.direction} từ ${log.from} → ${log.to}`
+        );
+    };
     
-    // SỬA LẠI: Gửi dữ liệu đúng format cho Apps Script
+    const allReplayLogs = [
+        ...formatReplayLogs(replayLog2, 'Part 2'),
+        ...formatReplayLogs(replayLog4, 'Part 4')
+    ];
+    
+    const totalReplayCount = replayLog2.length + replayLog4.length;
+    
+    // Dữ liệu gửi lên Google Sheets
     const dataToSend = {
         timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
         studentCode: studentInfo.code,
@@ -639,63 +689,76 @@ async function submitTest() {
         score: totalScore,
         correctAnswers: correctCount,
         wrongQuestions: wrongQuestions.join(', ') || 'Không có',
-        timeUsed: timeUsed + ' phút',
-        replayCount: totalReplayCount,  // SỬA: Đổi từ replayCountPart2/4 thành replayCount
+        timeUsed: timeUsedDisplay,
+        timeUsedSeconds: elapsedSeconds,
+        replayCount: totalReplayCount,
+        replayCountPart2: replayLog2.length,
+        replayCountPart4: replayLog4.length,
         replayLog: allReplayLogs.join(' | '),
         answers: JSON.stringify(answers)
     };
     
     try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
+        await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',  // THÊM: Để tránh CORS error
+            mode: 'no-cors',
             headers: { 
-                'Content-Type': 'application/json'  // SỬA: Đổi lại thành application/json
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(dataToSend)
         });
         
-        // Với mode: 'no-cors', ta không nhận được response
-        // Nên coi như thành công và hiển thị kết quả
         console.log('Dữ liệu đã gửi:', dataToSend);
-        showResults(correctCount, totalScore, timeUsed, wrongQuestions);
+        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
         
     } catch (error) {
         console.error('Lỗi gửi dữ liệu:', error);
-        // Vẫn hiển thị kết quả cho học sinh
-        showResults(correctCount, totalScore, timeUsed, wrongQuestions);
+        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
     }
 }
 
 // ========== HIỂN THỊ KẾT QUẢ ==========
-function showResults(correctCount, totalScore, timeUsed, wrongQuestions) {
+function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalReplayCount) {
     document.getElementById('testScreen').classList.add('hidden');
     document.getElementById('resultScreen').classList.remove('hidden');
     
     document.getElementById('resultScore').textContent = totalScore + '%';
     document.getElementById('resultCorrect').textContent = correctCount + '/12';
-    document.getElementById('resultTime').textContent = timeUsed + ' phút';
+    document.getElementById('resultTime').textContent = timeUsed;
+    document.getElementById('resultTotalReplays').textContent = totalReplayCount + ' lần';
     document.getElementById('wrongList').textContent = wrongQuestions.length > 0 ? 
         `Câu số: ${wrongQuestions.join(', ')}` : 'Không có câu sai - Hoàn hảo! 🎉';
     
-    let replayLogHtml = `<p class="font-semibold mb-2">Part 2: ${seekCount2} lần | Part 4: ${seekCount4} lần</p>`;
+    // Hiển thị log nghe lại CHI TIẾT
+    let replayLogHtml = '';
+    
     if (replayLog2.length > 0) {
-        replayLogHtml += '<div class="mb-2"><p class="font-semibold text-blue-700">Part 2:</p>';
-        replayLog2.forEach(log => replayLogHtml += `<p>• ${log}</p>`);
+        replayLogHtml += '<div class="mb-4 p-3 bg-blue-100 rounded-lg">';
+        replayLogHtml += '<p class="font-semibold text-blue-800 mb-2">📘 Part 2: ' + replayLog2.length + ' lần</p>';
+        replayLog2.forEach((log, idx) => {
+            const color = log.direction === 'TUA LẠI' ? 'text-orange-700' : 'text-blue-700';
+            replayLogHtml += `<p class="${color}">• Lần ${idx + 1}: <span class="font-semibold">${log.direction}</span> từ <span class="font-mono">${log.from}</span> → <span class="font-mono">${log.to}</span></p>`;
+        });
         replayLogHtml += '</div>';
     }
+    
     if (replayLog4.length > 0) {
-        replayLogHtml += '<div><p class="font-semibold text-purple-700">Part 4:</p>';
-        replayLog4.forEach(log => replayLogHtml += `<p>• ${log}</p>`);
+        replayLogHtml += '<div class="p-3 bg-purple-100 rounded-lg">';
+        replayLogHtml += '<p class="font-semibold text-purple-800 mb-2">📙 Part 4: ' + replayLog4.length + ' lần</p>';
+        replayLog4.forEach((log, idx) => {
+            const color = log.direction === 'TUA LẠI' ? 'text-orange-700' : 'text-purple-700';
+            replayLogHtml += `<p class="${color}">• Lần ${idx + 1}: <span class="font-semibold">${log.direction}</span> từ <span class="font-mono">${log.from}</span> → <span class="font-mono">${log.to}</span></p>`;
+        });
         replayLogHtml += '</div>';
     }
+    
     if (replayLog2.length === 0 && replayLog4.length === 0) {
-        replayLogHtml = '<p>Không nghe lại</p>';
+        replayLogHtml = '<p class="text-gray-600 italic">Không có lần nghe lại nào</p>';
     }
     
     document.getElementById('resultReplayLog').innerHTML = replayLogHtml;
     
-    // Hiển thị lại toàn bộ bài làm
+    // Hiển thị lại toàn bộ bài làm (KHÔNG HIỂN THỊ ĐÁP ÁN ĐÚNG)
     const reviewContainer = document.getElementById('reviewContainer');
     let html = '';
     
@@ -717,7 +780,8 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions) {
                 </div>
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
-                   <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || '(Không trả lời)'}</span></p>
+                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+
                 </div>
             </div>
         </div>
@@ -743,7 +807,8 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions) {
                 </div>
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
-                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || '(Không trả lời)'}</span></p>
+                    <<p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+
                 </div>
             </div>
         </div>
