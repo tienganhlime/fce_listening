@@ -717,8 +717,7 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions) {
                 </div>
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
-                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || '(Không trả lời)'}</span></p>
-                    ${!isCorrect ? `<p class="text-gray-700 mt-1"><span class="font-semibold">Đáp án đúng:</span> <span class="text-green-700 font-bold">${correctAns}</span></p>` : ''}
+                   <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || '(Không trả lời)'}</span></p>
                 </div>
             </div>
         </div>
@@ -745,7 +744,6 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions) {
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
                     <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || '(Không trả lời)'}</span></p>
-                    ${!isCorrect ? `<p class="text-gray-700 mt-1"><span class="font-semibold">Đáp án đúng:</span> <span class="text-green-700 font-bold">${correctAns}</span></p>` : ''}
                 </div>
             </div>
         </div>
