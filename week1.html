@@ -636,31 +636,41 @@ async function submitTest() {
     const allReplayLogs = [...replayLog2, ...replayLog4];
     
     const dataToSend = {
-        timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
-        studentCode: studentInfo.code,
-        weekNumber: WEEK_NUMBER,
-        score: totalScore,
-        correctAnswers: correctCount,
-        wrongQuestions: wrongQuestions.join(', ') || 'Không có',
-        timeUsed: timeUsed + ' phút',
-        replayCountPart2: seekCount2,
-        replayCountPart4: seekCount4,
-        replayLog: allReplayLogs.join(' | '),
-        answers: JSON.stringify(answers)
-    };
+    timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+    studentCode: studentInfo.code,
+    weekNumber: WEEK_NUMBER,
+    partNumber: 'Both', // THÊM DÒNG NÀY
+    totalQuestions: 12, // THÊM DÒNG NÀY
+    score: totalScore,
+    correctAnswers: correctCount,
+    wrongQuestions: wrongQuestions.join(', ') || 'Không có',
+    timeUsed: timeUsed + ' phút',
+    replayCountPart2: seekCount2,
+    replayCountPart4: seekCount4,
+    replayLog: allReplayLogs.join(' | '),
+    answers: JSON.stringify(answers)
+};
     
     try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSend)
-        });
-    } catch (error) {
-        console.error('Lỗi gửi dữ liệu:', error);
-    }
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'text/plain;charset=utf-8'  // Thay đổi header
+        },
+        body: JSON.stringify(dataToSend)
+    });
     
-    showResults(correctCount, totalScore, timeUsed, wrongQuestions);
+    const result = await response.json();
+    console.log('Kết quả gửi:', result);
+    
+    if (result.status === 'success') {
+        showResults(correctCount, totalScore, timeUsed, wrongQuestions);
+    } else {
+        alert('Có lỗi khi lưu dữ liệu: ' + result.message);
+    }
+} catch (error) {
+    console.error('Lỗi gửi dữ liệu:', error);
+    alert('Lỗi kết nối! Vui lòng kiểm tra Internet.');
 }
 
 // ========== HIỂN THỊ KẾT QUẢ ==========
