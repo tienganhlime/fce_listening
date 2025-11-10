@@ -462,9 +462,7 @@ function loadLesson() {
     
     audio2.addEventListener('timeupdate', () => trackAudio(audio2, 'audioTime2', 2));
     audio4.addEventListener('timeupdate', () => trackAudio(audio4, 'audioTime4', 4));
-    
-    audio2.addEventListener('seeked', () => logReplay(2));
-    audio4.addEventListener('seeked', () => logReplay(4));
+
     
     renderQuestions();
 }
@@ -589,38 +587,40 @@ function trackAudio(audioEl, timeId, partNum) {
     const duration = formatTime(audioEl.duration);
     document.getElementById(timeId).textContent = `${current} / ${duration}`;
     
-    if (partNum === 2) lastPos2 = audioEl.currentTime;
-    if (partNum === 4) lastPos4 = audioEl.currentTime;
-}
-
-function logReplay(partNum) {
-    const audioEl = partNum === 2 ? audio2 : audio4;
+    const currentPos = audioEl.currentTime;
     const lastPos = partNum === 2 ? lastPos2 : lastPos4;
     
-    if (!audioEl || audioEl.currentTime === 0) return;
+    // KIỂM TRA TUA NGAY TRONG trackAudio (chạy mỗi frame)
+    const timeDiff = Math.abs(currentPos - lastPos);
     
-    const currentPos = audioEl.currentTime;
-    
-    // Kiểm tra nếu học sinh tua lại (seeking backward) hoặc tua tới quá xa (seeking forward > 3s)
-    const timeDiff = currentPos - lastPos;
-    
-    if (Math.abs(timeDiff) > 1) { // Nếu nhảy quá 1 giây thì ghi nhận
+    // Nếu nhảy quá 1 giây trong 1 frame (tức là có tua)
+    if (timeDiff > 1) {
         const logEntry = {
             from: formatTime(lastPos),
             to: formatTime(currentPos),
-            direction: timeDiff < 0 ? 'TUA LẠI' : 'TUA TỚI'
+            direction: (currentPos - lastPos) < 0 ? 'TUA LẠI' : 'TUA TỚI'
         };
         
         if (partNum === 2) {
             replayLog2.push(logEntry);
             document.getElementById('replayCount2').textContent = `Nghe lại: ${replayLog2.length} lần`;
+            lastPos2 = currentPos; // CẬP NHẬT NGAY
         } else {
             replayLog4.push(logEntry);
             document.getElementById('replayCount4').textContent = `Nghe lại: ${replayLog4.length} lần`;
+            lastPos4 = currentPos; // CẬP NHẬT NGAY
+        }
+        
+        console.log('Phát hiện tua:', logEntry); // LOG để test
+    } else {
+        // Cập nhật vị trí bình thường (khi phát liên tục)
+        if (partNum === 2) {
+            lastPos2 = currentPos;
+        } else {
+            lastPos4 = currentPos;
         }
     }
 }
-
 function formatTime(seconds) {
     if (isNaN(seconds)) return '00:00';
     const mins = Math.floor(seconds / 60);
