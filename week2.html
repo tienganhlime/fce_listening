@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Listening Week 2 - Trung Tâm Tiếng Anh LIME</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #81C784 100%);
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .correct-answer { background-color: #C8E6C9 !important; border-color: #4CAF50 !important; }
+        .wrong-answer { background-color: #FFCDD2 !important; border-color: #F44336 !important; }
+        label span { font-size: 20px; }
+        #instructions p, .text-sm { font-size: 20px !important; }
+    </style>
+</head>
+<body>
+
+<!-- Màn hình nhập mã -->
+<div id="codeScreen" class="min-h-screen p-4 fade-in">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mt-8">
+            <div class="text-center mb-8">
+                <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" 
+                     alt="LIME Logo" class="w-32 h-32 mx-auto mb-4 object-contain">
+                <h1 class="text-4xl font-bold text-green-700 mb-2">Trung Tâm Tiếng Anh LIME</h1>
+                <p class="text-green-600 text-lg">Hotline: 0976222792</p>
+                <div class="mt-4 h-1 w-32 bg-green-500 mx-auto rounded"></div>
+            </div>
+            
+            <div class="bg-green-50 rounded-xl p-6 mb-6">
+                <h2 class="text-2xl font-bold text-green-800 mb-4">FCE LISTENING - WEEK 2</h2>
+                <div class="space-y-2 text-green-700">
+                    <p>🎧 Part 1: Multiple Choice (8 câu)</p>
+                    <p>🎧 Part 2: Gap Fill (10 câu)</p>
+                    <p>⏰ Audio có thể tạm dừng/nghe lại</p>
+                    <p>✅ Chấm điểm tự động</p>
+                    <p>📊 Theo dõi tiến độ học tập</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-6">
+                <div class="flex items-start gap-2">
+                    <svg class="w-6 h-6 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div class="text-yellow-800 text-sm">
+                        <p class="font-bold mb-1">⚠️ Lưu ý:</p>
+                        <p>• Có thể tua/dừng/nghe lại audio</p>
+                        <p>• Hệ thống sẽ ghi nhận các lần nghe lại</p>
+                        <p>• Có thể làm lại nhiều lần</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-green-800 font-semibold mb-2">Mã học sinh *</label>
+                <input type="text" id="studentCode" 
+                    class="w-full px-4 py-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none uppercase"
+                    placeholder="Nhập mã học sinh (VD: HS001)">
+            </div>
+
+            <button onclick="verifyStudent()" 
+                class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition duration-300 text-lg shadow-lg">
+                XÁC NHẬN & BẮT ĐẦU
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Màn hình làm bài -->
+<div id="testScreen" class="hidden min-h-screen p-4 pb-32">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6 sticky top-4 z-10">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" 
+                         alt="LIME Logo" class="w-12 h-12 object-contain">
+                    <div>
+                        <h1 class="text-2xl font-bold text-green-700">FCE Listening - Week 2</h1>
+                        <p class="text-green-600 text-sm">Parts 1 & 2</p>
+                    </div>
+                </div>
+                
+                <div class="text-right">
+                    <p class="text-sm text-gray-600">Học sinh: <span id="headerName"></span></p>
+                    <p class="text-sm text-gray-600">Mã: <span id="headerCode"></span></p>
+                    <p class="text-sm text-gray-600">⏱️ Thời gian: <span id="timerDisplay">00:00</span></p>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Tiến độ: <span id="progress">0</span>/18 câu</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-green-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 1 -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
+            <div class="bg-blue-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
+                <h2 class="text-2xl font-bold">PART 1 - Multiple Choice</h2>
+                <p class="text-sm opacity-90">Questions 1-8 (8 câu)</p>
+            </div>
+
+            <!-- Audio Player Part 1 -->
+            <div class="bg-green-50 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold text-green-700">🎧 Audio Part 1</h3>
+                    <span id="replayCount1" class="text-sm text-gray-600">Nghe lại: 0 lần</span>
+                </div>
+                <audio id="audio1" controls class="w-full mb-2">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763283978/COMPLETE_FIRST_fS_SB_017_utk8il.mp3" type="audio/mpeg">
+                </audio>
+                <div id="audioTime1" class="text-sm text-gray-600 text-center">00:00 / 00:00</div>
+            </div>
+
+            <!-- Instructions Part 1 -->
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                <h3 class="font-bold text-blue-800 mb-2">📋 Instructions:</h3>
+                <p class="text-blue-700 text-sm mb-2">You will hear people talking in eight different situations. For questions 1-8, choose the best answer (A, B or C).</p>
+            </div>
+
+            <!-- Questions 1-8 -->
+            <div id="part1Container" class="space-y-6"></div>
+        </div>
+
+        <!-- PART 2 -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
+            <div class="bg-purple-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
+                <h2 class="text-2xl font-bold">PART 2 - Gap Fill</h2>
+                <p class="text-sm opacity-90">Questions 9-18 (10 câu)</p>
+            </div>
+
+            <!-- Audio Player Part 2 -->
+            <div class="bg-green-50 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold text-green-700">🎧 Audio Part 2</h3>
+                    <span id="replayCount2" class="text-sm text-gray-600">Nghe lại: 0 lần</span>
+                </div>
+                <audio id="audio2" controls class="w-full mb-2">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763284022/COMPLETE_FIRST_fS_WB_005_kdzshe.mp3" type="audio/mpeg">
+                </audio>
+                <div id="audioTime2" class="text-sm text-gray-600 text-center">00:00 / 00:00</div>
+            </div>
+
+            <!-- Instructions Part 2 -->
+            <div class="bg-purple-50 border-l-4 border-purple-600 p-4 mb-6">
+                <h3 class="font-bold text-purple-800 mb-2">📋 Instructions:</h3>
+                <p class="text-purple-700 text-sm">You will hear an interview with Ava Brown, a recent winner of a junior cooking show. For questions 9-18, complete the sentences with a word or short phrase.</p>
+            </div>
+
+            <!-- Questions 9-18 -->
+            <div id="part2Container" class="space-y-6"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <div id="warningBox" class="hidden mb-4 p-4 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
+                <p class="text-yellow-800 text-sm">
+                    ⚠️ Bạn còn <span id="unansweredCount">18</span> câu chưa trả lời!
+                </p>
+            </div>
+            
+            <button onclick="submitTest()" id="submitBtn"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition text-xl shadow-lg">
+                NỘP BÀI
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Màn hình kết quả -->
+<div id="resultScreen" class="hidden min-h-screen p-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mt-8 fade-in">
+            <div class="text-center mb-6">
+                <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" 
+                     alt="LIME Logo" class="w-32 h-32 mx-auto mb-4 object-contain">
+                <h1 class="text-3xl font-bold text-green-700 mb-2">Trung Tâm Tiếng Anh LIME</h1>
+            </div>
+
+            <div class="text-center mb-8">
+                <svg class="w-24 h-24 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h2 class="text-3xl font-bold text-green-800 mb-4">Nộp bài thành công!</h2>
+            </div>
+
+            <!-- Kết quả tổng quan -->
+            <div class="bg-green-50 rounded-xl p-6 mb-6 border-2 border-green-200">
+                <div class="grid grid-cols-4 gap-4 text-center">
+                    <div>
+                        <p class="text-gray-600">Điểm số</p>
+                        <p id="resultScore" class="text-3xl font-bold text-green-700">0%</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Câu đúng</p>
+                        <p id="resultCorrect" class="text-3xl font-bold text-green-700">0/18</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Thời gian làm bài</p>
+                        <p id="resultTime" class="text-2xl font-bold text-green-700">0 phút</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Tổng lần nghe lại</p>
+                        <p id="resultTotalReplays" class="text-2xl font-bold text-blue-700">0 lần</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh sách câu sai -->
+            <div class="bg-red-50 rounded-xl p-4 mb-6 border-2 border-red-200">
+                <h3 class="font-bold text-red-800 mb-2">❌ Các câu trả lời sai:</h3>
+                <p id="wrongList" class="text-red-700"></p>
+            </div>
+
+            <!-- Thống kê nghe lại CHI TIẾT -->
+            <div class="bg-blue-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-3">🔄 Thống kê nghe lại chi tiết:</h3>
+                <div id="resultReplayLog" class="text-blue-700 text-sm space-y-2"></div>
+            </div>
+
+            <!-- Hiển thị lại toàn bộ bài làm -->
+            <div class="bg-white rounded-xl p-6 mb-6 border-2 border-gray-200">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">📝 BÀI LÀM CỦA BẠN</h3>
+                <div id="reviewContainer" class="space-y-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="location.reload()" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition shadow-lg">
+                    Về trang chủ
+                </button>
+                <button onclick="location.reload()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition shadow-lg">
+                    Làm bài tiếp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== CẤU HÌNH ==========
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';
+const WEEK_NUMBER = 2;
+
+// Part 1 Configuration
+const PART1_CONFIG = {
+    title: 'Part 1 - Multiple Choice',
+    audioUrl: 'https://res.cloudinary.com/dzby0c2up/video/upload/v1763283978/COMPLETE_FIRST_fS_SB_017_utk8il.mp3',
+    questions: [
+        { 
+            num: 1, 
+            text: 'You hear a girl complaining about a problem she has had at school. Why was the girl upset?', 
+            type: 'choice', 
+            options: { 
+                A: 'She handed in an unfinished essay.', 
+                B: 'Her essay may only receive a score of 40%.', 
+                C: 'Her essay wasn\'t very good.' 
+            } 
+        },
+        { 
+            num: 2, 
+            text: 'You hear a boy admitting he copied his friend\'s work. Why did he do it?', 
+            type: 'choice', 
+            options: { 
+                A: 'His friend asked him to copy her work.', 
+                B: 'His teacher didn\'t know about the subject.', 
+                C: 'He did it because he wasn\'t keen on the subject.' 
+            } 
+        },
+        { 
+            num: 3, 
+            text: 'You hear a girl talking about her preference for coursework over exams. What reason does she give for her answer?', 
+            type: 'choice', 
+            options: { 
+                A: 'Exams do not always allow students to show their ability.', 
+                B: 'Exams are difficult for every student to do well in.', 
+                C: 'Exams just test how well you know a subject.' 
+            } 
+        },
+        { 
+            num: 4, 
+            text: 'You hear a boy talking about learning a new language. Why does he think that it\'s a good idea?', 
+            type: 'choice', 
+            options: { 
+                A: 'It\'s a really challenging experience.', 
+                B: 'There is a link between intelligence and language ability.', 
+                C: 'It will help with future employment opportunities.' 
+            } 
+        },
+        { 
+            num: 5, 
+            text: 'You hear a girl talking to her father about choosing a future course. What advice does her father give her?', 
+            type: 'choice', 
+            options: { 
+                A: 'just choose something she\'s interested in', 
+                B: 'find out more about the course', 
+                C: 'stop taking the course if she doesn\'t like it' 
+            } 
+        },
+        { 
+            num: 6, 
+            text: 'You hear a boy talking to a friend about his favourite subject at school. What does he like most about this subject?', 
+            type: 'choice', 
+            options: { 
+                A: 'making shapes out of paper', 
+                B: 'doing research', 
+                C: 'finding solutions' 
+            } 
+        },
+        { 
+            num: 7, 
+            text: 'You hear a girl talking about why students should have to do homework. What reason does she give?', 
+            type: 'choice', 
+            options: { 
+                A: 'Homework helps students to do better in their studies.', 
+                B: 'Students learn more at home than in class.', 
+                C: 'Teachers can tell students what they really think in the feedback.' 
+            } 
+        },
+        { 
+            num: 8, 
+            text: 'You hear a boy talking about doing group projects at school. What is his opinion about them?', 
+            type: 'choice', 
+            options: { 
+                A: 'Group projects force all members to do an equal share of the work.', 
+                B: 'Group projects can sometimes lead to some people doing more work than others.', 
+                C: 'Group projects are really annoying.' 
+            } 
+        }
+    ]
+};
+
+// Part 2 Configuration
+const PART2_CONFIG = {
+    title: 'Part 2 - Gap Fill',
+    audioUrl: 'https://res.cloudinary.com/dzby0c2up/video/upload/v1763284022/COMPLETE_FIRST_fS_WB_005_kdzshe.mp3',
+    questions: [
+        { num: 9, text: 'Ava\'s love of cooking came from her family who are (1) ........................ about food.', type: 'text' },
+        { num: 10, text: 'Ava first learnt how to cook Indian dishes because her grandmother (2) ........................ in Goa.', type: 'text' },
+        { num: 11, text: 'Learning the art of Indian cooking meant that she was good at (3) ........................ flavours in her dishes.', type: 'text' },
+        { num: 12, text: 'People were (4) ........................ when they tried her cooking.', type: 'text' },
+        { num: 13, text: 'She had different feelings about being accepted onto the show. On the one hand she felt nervous, yet on the other, she was (5) ........................', type: 'text' },
+        { num: 14, text: 'Despite any initial worries she had about being on TV, in the end she decided to (6) ........................', type: 'text' },
+        { num: 15, text: 'Ava admits that she found the competition difficult at times and she often found herself wanting to (7) ........................', type: 'text' },
+        { num: 16, text: 'One of the biggest challenges for Ava was managing her school work and the production (8) ........................', type: 'text' },
+        { num: 17, text: 'She was often asked to perform (9) ........................ and cook within a limited amount of time.', type: 'text' },
+        { num: 18, text: 'Nevertheless, Ava enjoyed being in the competition because she made friends and learnt some new (10) ........................ which will help her to become a better chef.', type: 'text' }
+    ]
+};
+
+// Correct Answers
+const correctAnswers = {
+    1: 'B', 2: 'C', 3: 'A', 4: 'C', 5: 'B', 6: 'C', 7: 'A', 8: 'B',
+    9: 'passionate', 10: 'grew up', 11: 'balancing', 12: 'full of praise', 
+    13: 'thrilled', 14: 'participate', 15: 'give up', 16: 'schedule', 
+    17: 'under pressure', 18: 'techniques'
+};
+
+// ========== BIẾN TOÀN CỤC ==========
+let studentInfo = {};
+let answers = {};
+let startTime;
+let timerInterval;
+let elapsedSeconds = 0;
+
+let audio1 = null, audio2 = null;
+let lastPos1 = 0, lastPos2 = 0;
+let replayLog1 = [], replayLog2 = [];
+
+// ========== XÁC THỰC HỌC SINH ==========
+async function verifyStudent() {
+    const code = document.getElementById('studentCode').value.trim().toUpperCase();
+    if (!code) {
+        alert('Vui lòng nhập mã học sinh!');
+        return;
+    }
+    
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> <span>Đang xác nhận mã...</span>';
+    
+    try {
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=verify&code=${code}`);
+        const data = await response.json();
+        
+        if (data.exists) {
+            studentInfo = { code: code, name: data.studentName };
+            document.getElementById('codeScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            document.getElementById('headerName').textContent = data.studentName;
+            document.getElementById('headerCode').textContent = code;
+            
+            loadLesson();
+            startTime = new Date();
+            startTimer();
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('❌ Mã học sinh không tồn tại!\n\n📞 Vui lòng liên hệ giáo viên để được hỗ trợ.');
+        }
+    } catch (error) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        alert('⚠️ Lỗi kết nối!\n\n📞 Vui lòng kiểm tra Internet hoặc liên hệ giáo viên.');
+        console.error('Error:', error);
+    }
+}
+
+// ========== TIMER ==========
+function startTimer() {
+    timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById('timerDisplay').textContent = display;
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+}
+
+// ========== TẢI BÀI HỌC ==========
+function loadLesson() {
+    audio1 = document.getElementById('audio1');
+    audio2 = document.getElementById('audio2');
+    
+    audio1.addEventListener('timeupdate', () => trackAudio(audio1, 'audioTime1', 1));
+    audio2.addEventListener('timeupdate', () => trackAudio(audio2, 'audioTime2', 2));
+    
+    renderQuestions();
+}
+
+// ========== RENDER CÂU HỎI ==========
+function renderQuestions() {
+    renderPart1();
+    renderPart2();
+}
+
+function renderPart1() {
+    const container = document.getElementById('part1Container');
+    let html = '';
+    
+    PART1_CONFIG.questions.forEach((q) => {
+        html += `
+        <div class="border-2 border-blue-200 rounded-xl p-6 bg-blue-50" id="question-${q.num}">
+            <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                        ${q.num}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <p class="text-gray-800 mb-4 text-lg font-semibold">${q.text}</p>
+                    <div class="space-y-2">
+        `;
+        
+        Object.entries(q.options).forEach(([key, value]) => {
+            html += `
+                <label class="flex items-start gap-3 p-4 rounded-lg cursor-pointer transition-all bg-white border-2 border-gray-300 hover:bg-blue-50 answer-option" data-question="${q.num}" data-answer="${key}">
+                    <input type="radio" name="q${q.num}" value="${key}" onchange="handleAnswer(${q.num}, '${key}')" class="mt-1 w-5 h-5 text-blue-600">
+                    <span class="flex-1 text-gray-700"><span class="font-semibold text-blue-700">${key}.</span> ${value}</span>
+                </label>
+            `;
+        });
+        
+        html += '</div></div></div></div>';
+    });
+    
+    container.innerHTML = html;
+}
+
+function renderPart2() {
+    const container = document.getElementById('part2Container');
+    let html = '';
+    
+    PART2_CONFIG.questions.forEach((q) => {
+        html += `
+        <div class="border-2 border-purple-200 rounded-xl p-6 bg-purple-50" id="question-${q.num}">
+            <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
+                        ${q.num}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <p class="text-gray-800 mb-4 text-lg">${q.text}</p>
+                    <input type="text" 
+                        id="answer-${q.num}" 
+                        onchange="handleAnswer(${q.num}, this.value)"
+                        class="w-full px-4 py-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                        placeholder="Nhập câu trả lời...">
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// ========== XỬ LÝ TRẢ LỜI ==========
+function handleAnswer(questionNum, answer) {
+    answers[questionNum] = answer;
+    updateProgress();
+    
+    // Highlight cho multiple choice (Part 1)
+    if (questionNum <= 8) {
+        const labels = document.querySelectorAll(`label[data-question="${questionNum}"]`);
+        labels.forEach(label => {
+            if (label.dataset.answer === answer) {
+                label.classList.remove('bg-white', 'border-gray-300');
+                label.classList.add('bg-blue-100', 'border-blue-500');
+            } else {
+                label.classList.remove('bg-blue-100', 'border-blue-500');
+                label.classList.add('bg-white', 'border-gray-300');
+            }
+        });
+    }
+}
+
+function updateProgress() {
+    const answered = Object.keys(answers).length;
+    const percent = Math.round((answered / 18) * 100);
+    document.getElementById('progress').textContent = answered;
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('progressBar').style.width = percent + '%';
+    
+    const unanswered = 18 - answered;
+    if (unanswered > 0) {
+        document.getElementById('warningBox').classList.remove('hidden');
+        document.getElementById('unansweredCount').textContent = unanswered;
+    } else {
+        document.getElementById('warningBox').classList.add('hidden');
+    }
+}
+
+// ========== AUDIO CONTROL ==========
+function trackAudio(audioEl, timeId, partNum) {
+    if (!audioEl) return;
+    const current = formatTime(audioEl.currentTime);
+    const duration = formatTime(audioEl.duration);
+    document.getElementById(timeId).textContent = `${current} / ${duration}`;
+    
+    const currentPos = audioEl.currentTime;
+    const lastPos = partNum === 1 ? lastPos1 : lastPos2;
+    
+    const timeDiff = Math.abs(currentPos - lastPos);
+    
+    if (timeDiff > 1) {
+        const logEntry = {
+            from: formatTime(lastPos),
+            to: formatTime(currentPos),
+            direction: (currentPos - lastPos) < 0 ? 'TUA LẠI' : 'TUA TỚI'
+        };
+        
+        if (partNum === 1) {
+            replayLog1.push(logEntry);
+            document.getElementById('replayCount1').textContent = `Nghe lại: ${replayLog1.length} lần`;
+            lastPos1 = currentPos;
+        } else {
+            replayLog2.push(logEntry);
+            document.getElementById('replayCount2').textContent = `Nghe lại: ${replayLog2.length} lần`;
+            lastPos2 = currentPos;
+        }
+    } else {
+        if (partNum === 1) {
+            lastPos1 = currentPos;
+        } else {
+            lastPos2 = currentPos;
+        }
+    }
+}
+
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '00:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// ========== NỘP BÀI ==========
+async function submitTest() {
+    const unanswered = 18 - Object.keys(answers).length;
+    if (unanswered > 0) {
+        if (!confirm(`Bạn còn ${unanswered} câu chưa trả lời. Nộp bài?`)) return;
+    }
+    
+    stopTimer();
+    
+    if (audio1) audio1.pause();
+    if (audio2) audio2.pause();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> <span>Đang xử lý...</span>';
+    
+    let correctCount = 0;
+    let wrongQuestions = [];
+
+    Object.keys(correctAnswers).forEach(q => {
+        const qNum = parseInt(q);
+        const userAnswer = answers[qNum];
+        const correctAns = correctAnswers[qNum];
+        
+        // So sánh đáp án
+        let isCorrect = false;
+        if (qNum <= 8) {
+            // Part 1: Multiple choice - so sánh trực tiếp
+            isCorrect = userAnswer && userAnswer.toUpperCase() === correctAns.toUpperCase();
+        } else {
+            // Part 2: Gap fill - so sánh không phân biệt hoa thường, trim space, bỏ dấu chấm cuối
+            if (userAnswer) {
+                const cleanUser = userAnswer.trim().toLowerCase().replace(/\.$/, '');
+                const cleanCorrect = correctAns.trim().toLowerCase().replace(/\.$/, '');
+                isCorrect = cleanUser === cleanCorrect;
+            }
+        }
+        
+        if (isCorrect) {
+            correctCount++;
+        } else {
+            wrongQuestions.push(qNum);
+        }
+    });
+
+    const totalScore = Math.round((correctCount / 18) * 100);
+    const timeUsedMinutes = Math.floor(elapsedSeconds / 60);
+    const timeUsedSeconds = elapsedSeconds % 60;
+    const timeUsedDisplay = `${timeUsedMinutes}p ${timeUsedSeconds}s`;
+    
+    // Format replay logs chi tiết
+    const formatReplayLogs = (logs, partName) => {
+        if (logs.length === 0) return [];
+        return logs.map((log, idx) => 
+            `${partName} - Lần ${idx + 1}: ${log.direction} từ ${log.from} → ${log.to}`
+        );
+    };
+    
+    const allReplayLogs = [
+        ...formatReplayLogs(replayLog1, 'Part 1'),
+        ...formatReplayLogs(replayLog2, 'Part 2')
+    ];
+    
+    const totalReplayCount = replayLog1.length + replayLog2.length;
+    
+    // Dữ liệu gửi lên Google Sheets - FIXED: đổi Part4 thành Part2
+    const dataToSend = {
+        timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+        studentCode: studentInfo.code,
+        weekNumber: WEEK_NUMBER,
+        partNumber: 'Both',
+        totalQuestions: 18,
+        score: totalScore,
+        correctAnswers: correctCount,
+        wrongQuestions: wrongQuestions.join(', ') || 'Không có',
+        timeUsed: timeUsedDisplay,
+        timeUsedSeconds: elapsedSeconds,
+        replayCount: totalReplayCount,
+        replayCountPart2: replayLog1.length,  // FIXED: Part 1 audio → Part2 trong Apps Script
+        replayCountPart4: replayLog2.length,  // FIXED: Part 2 audio → Part4 trong Apps Script
+        replayLog: allReplayLogs.join(' | '),
+        answers: JSON.stringify(answers)
+    };
+    
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+        
+        console.log('Dữ liệu đã gửi:', dataToSend);
+        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
+        
+    } catch (error) {
+        console.error('Lỗi gửi dữ liệu:', error);
+        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
+    }
+}
+
+// ========== HIỂN THỊ KẾT QUẢ ==========
+function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalReplayCount) {
+    document.getElementById('testScreen').classList.add('hidden');
+    document.getElementById('resultScreen').classList.remove('hidden');
+    
+    document.getElementById('resultScore').textContent = totalScore + '%';
+    document.getElementById('resultCorrect').textContent = correctCount + '/18';
+    document.getElementById('resultTime').textContent = timeUsed;
+    document.getElementById('resultTotalReplays').textContent = totalReplayCount + ' lần';
+    document.getElementById('wrongList').textContent = wrongQuestions.length > 0 ? 
+        `Câu số: ${wrongQuestions.join(', ')}` : 'Không có câu sai - Hoàn hảo! 🎉';
+    
+    // Hiển thị log nghe lại CHI TIẾT
+    let replayLogHtml = '';
+    
+    if (replayLog1.length > 0) {
+        replayLogHtml += '<div class="mb-4 p-3 bg-blue-100 rounded-lg">';
+        replayLogHtml += '<p class="font-semibold text-blue-800 mb-2">📘 Part 1: ' + replayLog1.length + ' lần</p>';
+        replayLog1.forEach((log, idx) => {
+            const color = log.direction === 'TUA LẠI' ? 'text-orange-700' : 'text-blue-700';
+            replayLogHtml += `<p class="${color}">• Lần ${idx + 1}: <span class="font-semibold">${log.direction}</span> từ <span class="font-mono">${log.from}</span> → <span class="font-mono">${log.to}</span></p>`;
+        });
+        replayLogHtml += '</div>';
+    }
+    
+    if (replayLog2.length > 0) {
+        replayLogHtml += '<div class="p-3 bg-purple-100 rounded-lg">';
+        replayLogHtml += '<p class="font-semibold text-purple-800 mb-2">📙 Part 2: ' + replayLog2.length + ' lần</p>';
+        replayLog2.forEach((log, idx) => {
+            const color = log.direction === 'TUA LẠI' ? 'text-orange-700' : 'text-purple-700';
+            replayLogHtml += `<p class="${color}">• Lần ${idx + 1}: <span class="font-semibold">${log.direction}</span> từ <span class="font-mono">${log.from}</span> → <span class="font-mono">${log.to}</span></p>`;
+        });
+        replayLogHtml += '</div>';
+    }
+    
+    if (replayLog1.length === 0 && replayLog2.length === 0) {
+        replayLogHtml = '<p class="text-gray-600 italic">Không có lần nghe lại nào</p>';
+    }
+    
+    document.getElementById('resultReplayLog').innerHTML = replayLogHtml;
+    
+    // Hiển thị lại toàn bộ bài làm
+    const reviewContainer = document.getElementById('reviewContainer');
+    let html = '';
+    
+    // Part 1 Review
+    html += '<div class="mb-8"><h4 class="text-xl font-bold text-blue-700 mb-4">Part 1 - Multiple Choice</h4>';
+    PART1_CONFIG.questions.forEach((q) => {
+        const userAnswer = answers[q.num];
+        const correctAns = correctAnswers[q.num];
+        const isCorrect = userAnswer && userAnswer.toUpperCase() === correctAns.toUpperCase();
+        const bgClass = isCorrect ? 'correct-answer' : 'wrong-answer';
+        
+        html += `
+        <div class="border-2 ${bgClass} rounded-xl p-6 mb-4">
+            <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 ${isCorrect ? 'bg-green-600' : 'bg-red-600'} text-white rounded-full flex items-center justify-center font-bold">
+                        ${q.num}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    html += '</div>';
+    
+    // Part 2 Review
+    html += '<div><h4 class="text-xl font-bold text-purple-700 mb-4">Part 2 - Gap Fill</h4>';
+    PART2_CONFIG.questions.forEach((q) => {
+        const userAnswer = answers[q.num];
+        const correctAns = correctAnswers[q.num];
+        
+        let isCorrect = false;
+        if (userAnswer) {
+            const cleanUser = userAnswer.trim().toLowerCase().replace(/\.$/, '');
+            const cleanCorrect = correctAns.trim().toLowerCase().replace(/\.$/, '');
+            isCorrect = cleanUser === cleanCorrect;
+        }
+        
+        const bgClass = isCorrect ? 'correct-answer' : 'wrong-answer';
+        
+        html += `
+        <div class="border-2 ${bgClass} rounded-xl p-6 mb-4">
+            <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 ${isCorrect ? 'bg-green-600' : 'bg-red-600'} text-white rounded-full flex items-center justify-center font-bold">
+                        ${q.num}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <p class="text-gray-800 mb-2 text-lg">${q.text}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    html += '</div>';
+    
+    reviewContainer.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
