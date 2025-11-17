@@ -507,6 +507,35 @@ function renderPart1() {
     container.innerHTML = html;
 }
 
+function renderPart2() {
+    const container = document.getElementById('part2Container');
+    let html = '';
+    
+    PART2_CONFIG.questions.forEach((q) => {
+        html += `
+        <div class="border-2 border-purple-200 rounded-xl p-6 bg-purple-50" id="question-${q.num}">
+            <div class="flex gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
+                        ${q.num}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <p class="text-gray-800 mb-4 text-lg">${q.text}</p>
+                    <input type="text" 
+                        id="answer-${q.num}" 
+                        onchange="handleAnswer(${q.num}, this.value)"
+                        class="w-full px-4 py-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                        placeholder="Nhập câu trả lời...">
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
 // ========== XỬ LÝ TRẢ LỜI ==========
 function handleAnswer(questionNum, answer) {
     answers[questionNum] = answer;
@@ -652,7 +681,7 @@ async function submitTest() {
     
     const totalReplayCount = replayLog1.length + replayLog2.length;
     
-    // Dữ liệu gửi lên Google Sheets
+    // Dữ liệu gửi lên Google Sheets - FIXED: đổi Part4 thành Part2
     const dataToSend = {
         timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
         studentCode: studentInfo.code,
@@ -665,8 +694,8 @@ async function submitTest() {
         timeUsed: timeUsedDisplay,
         timeUsedSeconds: elapsedSeconds,
         replayCount: totalReplayCount,
-        replayCountPart1: replayLog1.length,
-        replayCountPart2: replayLog2.length,
+        replayCountPart2: replayLog1.length,  // FIXED: Part 1 audio → Part2 trong Apps Script
+        replayCountPart4: replayLog2.length,  // FIXED: Part 2 audio → Part4 trong Apps Script
         replayLog: allReplayLogs.join(' | '),
         answers: JSON.stringify(answers)
     };
@@ -754,6 +783,7 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
                     <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                    ${!isCorrect ? `<p class="text-gray-700 mt-1"><span class="font-semibold">Đáp án đúng:</span> <span class="text-green-700 font-bold">${correctAns}</span></p>` : ''}
                 </div>
             </div>
         </div>
@@ -787,6 +817,7 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg">${q.text}</p>
                     <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                    ${!isCorrect ? `<p class="text-gray-700 mt-1"><span class="font-semibold">Đáp án đúng:</span> <span class="text-green-700 font-bold">${correctAns}</span></p>` : ''}
                 </div>
             </div>
         </div>
@@ -800,32 +831,3 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
 
 </body>
 </html>
-}
-
-function renderPart2() {
-    const container = document.getElementById('part2Container');
-    let html = '';
-    
-    PART2_CONFIG.questions.forEach((q) => {
-        html += `
-        <div class="border-2 border-purple-200 rounded-xl p-6 bg-purple-50" id="question-${q.num}">
-            <div class="flex gap-4">
-                <div class="flex-shrink-0">
-                    <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
-                        ${q.num}
-                    </div>
-                </div>
-                <div class="flex-1">
-                    <p class="text-gray-800 mb-4 text-lg">${q.text}</p>
-                    <input type="text" 
-                        id="answer-${q.num}" 
-                        onchange="handleAnswer(${q.num}, this.value)"
-                        class="w-full px-4 py-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none"
-                        placeholder="Nhập câu trả lời...">
-                </div>
-            </div>
-        </div>
-        `;
-    });
-    
-    container.innerHTML = html;
