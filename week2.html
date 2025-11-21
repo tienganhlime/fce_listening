@@ -107,6 +107,8 @@
                     <p class="text-sm text-gray-600">Học sinh: <span id="headerName"></span></p>
                     <p class="text-sm text-gray-600">Mã: <span id="headerCode"></span></p>
                     <p class="text-sm text-gray-600">⏱️ Thời gian: <span id="timerDisplay">00:00</span></p>
+<!-- THÊM SAU dòng hiển thị timer -->
+<p class="text-sm text-red-600" id="tabSwitchWarning" style="display:none;">⚠️ Chuyển tab: <span id="tabSwitchCount">0</span> lần</p>
                 </div>
             </div>
             
@@ -233,7 +235,11 @@
                     </div>
                 </div>
             </div>
-
+<!-- THÊM SAU phần kết quả tổng quan, TRƯỚC phần "Danh sách câu sai" -->
+<div id="tabSwitchResult" class="hidden bg-red-50 rounded-xl p-4 mb-6 border-2 border-red-200">
+    <h3 class="font-bold text-red-800 mb-2">⚠️ Cảnh báo hành vi:</h3>
+    <p id="tabSwitchResultText" class="text-red-700"></p>
+</div>
             <!-- Danh sách câu sai -->
             <div class="bg-red-50 rounded-xl p-4 mb-6 border-2 border-red-200">
                 <h3 class="font-bold text-red-800 mb-2">❌ Các câu trả lời sai:</h3>
@@ -377,14 +383,6 @@ const PART2_CONFIG = {
     ]
 };
 
-// Correct Answers
-const correctAnswers = {
-    1: 'B', 2: 'C', 3: 'A', 4: 'C', 5: 'B', 6: 'C', 7: 'A', 8: 'B',
-    9: 'passionate', 10: 'grew up', 11: 'balancing', 12: 'full of praise', 
-    13: 'thrilled', 14: 'participate', 15: 'give up', 16: 'schedule', 
-    17: 'under pressure', 18: 'techniques'
-};
-
 // ========== BIẾN TOÀN CỤC ==========
 let studentInfo = {};
 let answers = {};
@@ -395,6 +393,27 @@ let elapsedSeconds = 0;
 let audio1 = null, audio2 = null;
 let lastPos1 = 0, lastPos2 = 0;
 let replayLog1 = [], replayLog2 = [];
+let tabSwitchCount = 0;
+let tabSwitchLog = [];
+
+// THÊM ĐOẠN NÀY ngay sau khai báo biến:
+window.addEventListener('blur', function() {
+    if (document.getElementById('testScreen').classList.contains('hidden')) return;
+    
+    tabSwitchCount++;
+    const timestamp = new Date().toLocaleTimeString('vi-VN');
+    tabSwitchLog.push(`${timestamp} - Rời khỏi trang`);
+    
+    document.getElementById('tabSwitchWarning').style.display = 'block';
+    document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
+});
+
+window.addEventListener('focus', function() {
+    if (document.getElementById('testScreen').classList.contains('hidden')) return;
+    
+    const timestamp = new Date().toLocaleTimeString('vi-VN');
+    tabSwitchLog.push(`${timestamp} - Quay lại trang`);
+});
 
 // ========== XÁC THỰC HỌC SINH ==========
 async function verifyStudent() {
@@ -616,7 +635,7 @@ function formatTime(seconds) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-// ========== NỘP BÀI ==========
+// THAY THẾ HÀM submitTest() CŨ BẰNG:
 async function submitTest() {
     const unanswered = 18 - Object.keys(answers).length;
     if (unanswered > 0) {
@@ -632,41 +651,10 @@ async function submitTest() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<div class="spinner"></div> <span>Đang xử lý...</span>';
     
-    let correctCount = 0;
-    let wrongQuestions = [];
-
-    Object.keys(correctAnswers).forEach(q => {
-        const qNum = parseInt(q);
-        const userAnswer = answers[qNum];
-        const correctAns = correctAnswers[qNum];
-        
-        // So sánh đáp án
-        let isCorrect = false;
-        if (qNum <= 8) {
-            // Part 1: Multiple choice - so sánh trực tiếp
-            isCorrect = userAnswer && userAnswer.toUpperCase() === correctAns.toUpperCase();
-        } else {
-            // Part 2: Gap fill - so sánh không phân biệt hoa thường, trim space, bỏ dấu chấm cuối
-            if (userAnswer) {
-                const cleanUser = userAnswer.trim().toLowerCase().replace(/\.$/, '');
-                const cleanCorrect = correctAns.trim().toLowerCase().replace(/\.$/, '');
-                isCorrect = cleanUser === cleanCorrect;
-            }
-        }
-        
-        if (isCorrect) {
-            correctCount++;
-        } else {
-            wrongQuestions.push(qNum);
-        }
-    });
-
-    const totalScore = Math.round((correctCount / 18) * 100);
     const timeUsedMinutes = Math.floor(elapsedSeconds / 60);
     const timeUsedSeconds = elapsedSeconds % 60;
     const timeUsedDisplay = `${timeUsedMinutes}p ${timeUsedSeconds}s`;
     
-    // Format replay logs chi tiết
     const formatReplayLogs = (logs, partName) => {
         if (logs.length === 0) return [];
         return logs.map((log, idx) => 
@@ -681,46 +669,63 @@ async function submitTest() {
     
     const totalReplayCount = replayLog1.length + replayLog2.length;
     
-    // Dữ liệu gửi lên Google Sheets - FIXED: đổi Part4 thành Part2
+    // Dữ liệu gửi lên server để CHẤM ĐIỂM
     const dataToSend = {
+        action: 'grade',  // MỚI: Báo server chấm điểm
         timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
         studentCode: studentInfo.code,
         weekNumber: WEEK_NUMBER,
         partNumber: 'Both',
         totalQuestions: 18,
-        score: totalScore,
-        correctAnswers: correctCount,
-        wrongQuestions: wrongQuestions.join(', ') || 'Không có',
         timeUsed: timeUsedDisplay,
         timeUsedSeconds: elapsedSeconds,
         replayCount: totalReplayCount,
-        replayCountPart2: replayLog1.length,  // FIXED: Part 1 audio → Part2 trong Apps Script
-        replayCountPart4: replayLog2.length,  // FIXED: Part 2 audio → Part4 trong Apps Script
+        replayCountPart2: replayLog1.length,
+        replayCountPart4: replayLog2.length,
         replayLog: allReplayLogs.join(' | '),
-        answers: JSON.stringify(answers)
+        tabSwitchCount: tabSwitchCount,  // MỚI
+        tabSwitchLog: tabSwitchLog.join(' | '),  // MỚI
+        answers: JSON.stringify(answers)  // GỬI ĐÁP ÁN HỌC SINH
     };
     
     try {
-        await fetch(GOOGLE_SCRIPT_URL, {
+        // GỌI SERVER CHẤM ĐIỂM
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
             headers: { 
-                'Content-Type': 'application/json'
+                'Content-Type': 'text/plain'
             },
             body: JSON.stringify(dataToSend)
         });
         
-        console.log('Dữ liệu đã gửi:', dataToSend);
-        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            // NHẬN KẾT QUẢ TỪ SERVER
+            showResults(
+                result.correctCount, 
+                result.score, 
+                timeUsedDisplay, 
+                result.wrongQuestions,
+                result.correctQuestions,  // MỚI: Danh sách câu đúng
+                totalReplayCount
+            );
+        } else {
+            alert('Lỗi khi chấm bài: ' + result.message);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'NỘP BÀI';
+        }
         
     } catch (error) {
         console.error('Lỗi gửi dữ liệu:', error);
-        showResults(correctCount, totalScore, timeUsedDisplay, wrongQuestions, totalReplayCount);
+        alert('❌ Lỗi kết nối! Vui lòng thử lại.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'NỘP BÀI';
     }
 }
 
-// ========== HIỂN THỊ KẾT QUẢ ==========
-function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalReplayCount) {
+// THAY THẾ HÀM showResults() CŨ BẰNG:
+function showResults(correctCount, totalScore, timeUsed, wrongQuestions, correctQuestions, totalReplayCount) {
     document.getElementById('testScreen').classList.add('hidden');
     document.getElementById('resultScreen').classList.remove('hidden');
     
@@ -728,8 +733,18 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
     document.getElementById('resultCorrect').textContent = correctCount + '/18';
     document.getElementById('resultTime').textContent = timeUsed;
     document.getElementById('resultTotalReplays').textContent = totalReplayCount + ' lần';
+    
+    // Hiển thị danh sách câu sai
     document.getElementById('wrongList').textContent = wrongQuestions.length > 0 ? 
         `Câu số: ${wrongQuestions.join(', ')}` : 'Không có câu sai - Hoàn hảo! 🎉';
+    
+    // Hiển thị cảnh báo chuyển tab (nếu có)
+    if (tabSwitchCount > 0) {
+        document.getElementById('tabSwitchResult').classList.remove('hidden');
+        document.getElementById('tabSwitchResultText').innerHTML = 
+            `Hệ thống phát hiện bạn chuyển tab/cửa sổ <strong>${tabSwitchCount} lần</strong> trong quá trình làm bài.<br>` +
+            `Thông tin này đã được ghi nhận và gửi về giáo viên.`;
+    }
     
     // Hiển thị log nghe lại CHI TIẾT
     let replayLogHtml = '';
@@ -760,7 +775,7 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
     
     document.getElementById('resultReplayLog').innerHTML = replayLogHtml;
     
-    // Hiển thị lại toàn bộ bài làm
+    // Hiển thị lại toàn bộ bài làm - CHỈ HIỆN ĐÚNG/SAI, KHÔNG HIỆN ĐÁP ÁN
     const reviewContainer = document.getElementById('reviewContainer');
     let html = '';
     
@@ -768,9 +783,10 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
     html += '<div class="mb-8"><h4 class="text-xl font-bold text-blue-700 mb-4">Part 1 - Multiple Choice</h4>';
     PART1_CONFIG.questions.forEach((q) => {
         const userAnswer = answers[q.num];
-        const correctAns = correctAnswers[q.num];
-        const isCorrect = userAnswer && userAnswer.toUpperCase() === correctAns.toUpperCase();
+        const isCorrect = correctQuestions.includes(q.num);
         const bgClass = isCorrect ? 'correct-answer' : 'wrong-answer';
+        const statusIcon = isCorrect ? '✅' : '❌';
+        const statusText = isCorrect ? 'ĐÚNG' : 'SAI';
         
         html += `
         <div class="border-2 ${bgClass} rounded-xl p-6 mb-4">
@@ -782,7 +798,13 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
                 </div>
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg font-semibold">${q.text}</p>
-                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-semibold">Câu trả lời của bạn:</span> 
+                        <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || 'Bỏ trống'}</span>
+                    </p>
+                    <p class="text-lg">
+                        <span class="${isCorrect ? 'text-green-700' : 'text-red-700'} font-bold">${statusIcon} ${statusText}</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -794,16 +816,10 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
     html += '<div><h4 class="text-xl font-bold text-purple-700 mb-4">Part 2 - Gap Fill</h4>';
     PART2_CONFIG.questions.forEach((q) => {
         const userAnswer = answers[q.num];
-        const correctAns = correctAnswers[q.num];
-        
-        let isCorrect = false;
-        if (userAnswer) {
-            const cleanUser = userAnswer.trim().toLowerCase().replace(/\.$/, '');
-            const cleanCorrect = correctAns.trim().toLowerCase().replace(/\.$/, '');
-            isCorrect = cleanUser === cleanCorrect;
-        }
-        
+        const isCorrect = correctQuestions.includes(q.num);
         const bgClass = isCorrect ? 'correct-answer' : 'wrong-answer';
+        const statusIcon = isCorrect ? '✅' : '❌';
+        const statusText = isCorrect ? 'ĐÚNG' : 'SAI';
         
         html += `
         <div class="border-2 ${bgClass} rounded-xl p-6 mb-4">
@@ -815,7 +831,13 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
                 </div>
                 <div class="flex-1">
                     <p class="text-gray-800 mb-2 text-lg">${q.text}</p>
-                    <p class="text-gray-700"><span class="font-semibold">Câu trả lời của bạn:</span> <span class="${userAnswer ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : 'text-gray-500 italic'}">${userAnswer || 'Bỏ trống'}</span></p>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-semibold">Câu trả lời của bạn:</span> 
+                        <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${userAnswer || 'Bỏ trống'}</span>
+                    </p>
+                    <p class="text-lg">
+                        <span class="${isCorrect ? 'text-green-700' : 'text-red-700'} font-bold">${statusIcon} ${statusText}</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -825,6 +847,7 @@ function showResults(correctCount, totalScore, timeUsed, wrongQuestions, totalRe
     
     reviewContainer.innerHTML = html;
 }
+
 </script>
 
 </body>
