@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCE Listening Week 3 - Trung Tâm Tiếng Anh LIME</title>
+    <title>FCE Listening Week 3 - LIME</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #81C784 100%); }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #4CAF50; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -16,18 +14,18 @@
 <body>
 
 <script>
-    // THAY 1 LẦN DUY NHẤT
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';
-    const WEEK_NUMBER = 3;
+// THAY 1 LẦN DUY NHẤT
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';
+const WEEK_NUMBER = 3;
 </script>
 
 <!-- MÀN HÌNH NHẬP MÃ -->
-<div id="codeScreen" class="min-h-screen p-4 fade-in">
-    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 mt-20 text-center">
-        <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME" class="w-32 h-32 mx-auto mb-4">
+<div id="codeScreen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-10 text-center max-w-md w-full">
+        <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME" class="w-32 mx-auto mb-6">
         <h1 class="text-4xl font-bold text-green-700 mb-6">FCE Listening – Week 3</h1>
-        <input type="text" id="studentCode" class="w-full max-w-xs mx-auto px-4 py-3 border-2 border-green-400 rounded-lg text-center uppercase text-xl" placeholder="Mã học sinh">
-        <button onclick="verifyStudent()" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-xl text-xl">BẮT ĐẦU</button>
+        <input type="text" id="studentCode" class="w-full px-5 py-4 border-2 border-green-400 rounded-xl text-center text-xl uppercase" placeholder="Nhập mã học sinh">
+        <button onclick="verifyStudent()" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-xl">BẮT ĐẦU</button>
     </div>
 </div>
 
@@ -57,8 +55,8 @@
                     <span>Tiến độ: <span id="progress">0</span>/13</span>
                     <span id="progressPercent">0%</span>
                 </div>
-                <div class="w-full bg-gray-300 rounded-full h-3">
-                    <div id="progressBar" class="bg-green-600 h-3 rounded-full transition-all" style="width:0%"></div>
+                <div class="w-full bg-gray-300 rounded-full h-4">
+                    <div id="progressBar" class="bg-green-600 h-4 rounded-full transition-all" style="width:0%"></div>
                 </div>
             </div>
         </div>
@@ -251,38 +249,85 @@
             </div>
         </div>
 
-        <button onclick="submitTest()" id="submitBtn" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-xl shadow-2xl z-20">
+
+        <button onclick="submitTest()" id="submitBtn" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-2xl shadow-2xl z-20">
             NỘP BÀI
         </button>
     </div>
 </div>
 
+<!-- MÀN HÌNH KẾT QUẢ ĐẸP -->
+<div id="resultScreen" class="hidden min-h-screen p-6 bg-gradient-to-br from-green-50 to-blue-50">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-10 mt-10">
+        <h1 class="text-5xl font-bold text-green-700 text-center mb-8">KẾT QUẢ WEEK 3</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-blue-100 p-6 rounded-xl text-center">
+                <p class="text-blue-600 text-sm">Điểm số</p>
+                <p class="text-4xl font-bold text-blue-800" id="resultScore">0%</p>
+            </div>
+            <div class="bg-green-100 p-6 rounded-xl text-center">
+                <p class="text-green-600 text-sm">Số câu đúng</p>
+                <p class="text-4xl font-bold text-green-800" id="resultCorrect">0/13</p>
+            </div>
+            <div class="bg-purple-100 p-6 rounded-xl text-center">
+                <p class="text-purple-600 text-sm">Thời gian</p>
+                <p class="text-4xl font-bold text-purple-800" id="resultTime">00:00</p>
+            </div>
+            <div class="bg-orange-100 p-6 rounded-xl text-center">
+                <p class="text-orange-600 text-sm">Chuyển tab</p>
+                <p class="text-4xl font-bold text-orange-800" id="resultTabSwitches">0 lần</p>
+            </div>
+        </div>
+
+        <div id="tabSwitchDetails" class="bg-red-50 border border-red-300 rounded-xl p-6 mb-8 hidden">
+            <p class="font-bold text-red-700 mb-3">Chi tiết chuyển tab:</p>
+            <div id="tabSwitchList" class="text-red-600 font-mono"></div>
+        </div>
+
+        <div class="bg-yellow-50 rounded-xl p-6">
+            <p class="font-bold text-yellow-800 mb-3 text-xl">Câu sai:</p>
+            <p id="wrongList" class="text-2xl">Không có</p>
+        </div>
+
+        <div class="text-center mt-10">
+            <button onclick="location.reload()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-xl text-xl">
+                LÀM LẠI BÀI
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 let studentName = '', studentCode = '', startTime, timerInterval;
-let tabSwitchCount = 0, tabSwitchLog = [];
+let tabSwitchCount = 0, tabSwitchLog = []; // [{start: 120, end: 135}, ...]
+let currentSwitchStart = null;
 let lastTime1 = 0, lastTime2 = 0;
 const answers = {};
 
 function verifyStudent() {
     studentCode = document.getElementById('studentCode').value.trim().toUpperCase();
-    if (!studentCode) return alert('Nhập mã học sinh!');
+    if (!studentCode) return alert('Vui lòng nhập mã!');
     fetch(`${SCRIPT_URL}?action=verify&code=${studentCode}`)
         .then(r => r.json())
         .then(data => {
             if (data.exists) {
                 studentName = data.studentName;
                 document.getElementById('codeScreen').classList.add('hidden');
-                document.getElementById('testScreen').classList.remove('hidden');
+                document.getElementBy timeScreen').classList.remove('hidden');
                 document.getElementById('headerName').textContent = studentName;
                 document.getElementById('headerCode').textContent = studentCode;
                 startTime = new Date();
                 timerInterval = setInterval(updateTimer, 1000);
 
-                // BẮT CHUYỂN TAB
+                // THEO DÕI CHUYỂN TAB CHI TIẾT
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
+                        currentSwitchStart = Math.floor((new Date() - startTime) / 1000);
+                    } else if (currentSwitchStart !== null) {
+                        const end = Math.floor((new Date() - startTime) / 1000);
                         tabSwitchCount++;
-                        tabSwitchLog.push(new Date().toLocaleTimeString());
+                        tabSwitchLog.push({start: currentSwitchStart, end: end});
+                        currentSwitchStart = null;
                         document.getElementById('tabSwitchWarning').classList.remove('hidden');
                         document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
                     }
@@ -291,27 +336,15 @@ function verifyStudent() {
         });
 }
 
-function startTracking(part) {
-    if (part === 1) lastTime1 = document.getElementById('audio1').currentTime;
-    if (part === 2) lastTime2 = document.getElementById('audio2').currentTime;
-}
-
-function logReplay(part) {
-    const audio = part === 1 ? document.getElementById('audio1') : document.getElementById('audio2');
-    const now = audio.currentTime;
-    const last = part === 1 ? lastTime1 : lastTime2;
-    if (Math.abs(now - last) > 2) {
-        // ghi log tua nếu cần
-    }
-    if (part === 1) lastTime1 = now;
-    else lastTime2 = now;
+function formatTime(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return `${m}:${s}`;
 }
 
 function updateTimer() {
     const diff = Math.floor((new Date() - startTime) / 1000);
-    const m = String(Math.floor(diff / 60)).padStart(2, '0');
-    const s = String(diff % 60).padStart(2, '0');
-    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    document.getElementById('timerDisplay').textContent = formatTime(diff);
     updateProgress();
 }
 
@@ -324,6 +357,10 @@ function updateProgress() {
     document.getElementById('progressPercent').textContent = Math.round((filled / 13) * 100) + '%';
     document.getElementById('progressBar').style.width = (filled / 13 * 100) + '%';
 }
+
+// Audio tracking (đã sửa lỗi)
+function startTracking(part) { /* không cần làm gì */ }
+function logReplay(part) { /* không cần làm gì */ }
 
 function submitTest() {
     if (!confirm('Nộp bài luôn nhé?')) return;
@@ -343,16 +380,32 @@ function submitTest() {
         timestamp: new Date().toLocaleString('vi-VN'),
         timeUsed: document.getElementById('timerDisplay').textContent,
         tabSwitchCount,
-        tabSwitchLog: tabSwitchLog.join(' | ')
+        tabSwitchLog: JSON.stringify(tabSwitchLog)
     };
 
     fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
         .then(r => r.json())
         .then(res => {
             clearInterval(timerInterval);
-            alert(`Hoàn thành!\nĐúng ${res.correctCount}/13 câu (${Math.round(res.correctCount/13*100)}%)` + 
-                  (tabSwitchCount > 0 ? `\nChuyển tab: ${tabSwitchCount} lần` : ''));
-            location.reload();
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            document.getElementById('resultScore').textContent = Math.round((res.correctCount / 13) * 100) + '%';
+            document.getElementById('resultCorrect').textContent = res.correctCount + '/13';
+            document.getElementById('resultTime').textContent = payload.timeUsed;
+            document.getElementById('resultTabSwitches').textContent = tabSwitchCount + ' lần';
+
+            if (tabSwitchCount > 0) {
+                document.getElementById('tabSwitchDetails').classList.remove('hidden');
+                const list = tabSwitchLog.map((log, i) => 
+                    `Lần ${i+1}: từ ${formatTime(log.start)} → ${formatTime(log.end)}`
+                ).join('<br>');
+                document.getElementById('tabSwitchList').innerHTML = list;
+            }
+
+            if (res.wrongQuestions.length > 0) {
+                document.getElementById('wrongList').innerHTML = 'Câu: ' + res.wrongQuestions.join(', ');
+            }
         });
 }
 </script>
