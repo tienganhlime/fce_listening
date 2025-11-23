@@ -395,10 +395,11 @@ let lastPos1 = 0, lastPos2 = 0;
 let replayLog1 = [], replayLog2 = [];
 let tabSwitchCount = 0;
 let tabSwitchLog = [];
+let isTestStarted = false;  // ✅ THÊM BIẾN NÀY
 
-// THÊM ĐOẠN NÀY ngay sau khai báo biến:
+// ✅ SỬA: Thêm kiểm tra isTestStarted
 window.addEventListener('blur', function() {
-    if (document.getElementById('testScreen').classList.contains('hidden')) return;
+    if (!isTestStarted) return;  // ✅ THAY ĐỔI ĐIỀU KIỆN
     
     tabSwitchCount++;
     const timestamp = new Date().toLocaleTimeString('vi-VN');
@@ -409,7 +410,7 @@ window.addEventListener('blur', function() {
 });
 
 window.addEventListener('focus', function() {
-    if (document.getElementById('testScreen').classList.contains('hidden')) return;
+    if (!isTestStarted) return;  // ✅ THAY ĐỔI ĐIỀU KIỆN
     
     const timestamp = new Date().toLocaleTimeString('vi-VN');
     tabSwitchLog.push(`${timestamp} - Quay lại trang`);
@@ -438,7 +439,7 @@ async function verifyStudent() {
             document.getElementById('testScreen').classList.remove('hidden');
             document.getElementById('headerName').textContent = data.studentName;
             document.getElementById('headerCode').textContent = code;
-            
+            isTestStarted = true;  // ✅ THÊM DÒNG NÀY
             loadLesson();
             startTime = new Date();
             startTimer();
