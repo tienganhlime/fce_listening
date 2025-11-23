@@ -69,7 +69,7 @@ const WEEK_NUMBER = 3;
             </div>
 
             <div class="bg-green-50 rounded-xl p-6 mb-8">
-              <audio id="audio1" controls class="w-full">
+                <audio id="audio1" controls class="w-full" ontimeupdate="trackReplay(1)" onplay="startTracking(1)" onseeked="logReplay(1)">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894834/COMPLETE_FIRST_fS_WB_007_qzivks.mp3" type="audio/mpeg">
 
                     Trình duyệt không hỗ trợ audio.
@@ -157,7 +157,7 @@ const WEEK_NUMBER = 3;
                 <h2 class="text-2xl font-bold">PART 3 – Multiple Matching (9–13)</h2>
             </div>
             <div class="bg-green-50 p-6 rounded-xl mb-8">
-               <audio id="audio2" controls class="w-full">
+                <audio id="audio2" controls class="w-full" onplay="startTracking(2)" onseeked="logReplay(2)">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894868/COMPLETE_FIRST_fS_SB_021_sfmb0v.mp3" type="audio/mpeg">
 
                 </audio>
@@ -381,8 +381,6 @@ function submitTest() {
         timeUsed: document.getElementById('timerDisplay').textContent,
         tabSwitchCount,
         tabSwitchLog: JSON.stringify(tabSwitchLog)
-        replayCount: replayLog.length,
-replayLog: replayLog.join(' | ')
     };
 
     fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
@@ -410,33 +408,6 @@ replayLog: replayLog.join(' | ')
             }
         });
 }
-    <script>
-// Track tua lại audio (chỉ thêm đoạn này, không khai báo lại lastTime1, lastTime2)
-let replayLog = [];
-
-document.getElementById('audio1').addEventListener('play', () => {
-    lastTime1 = document.getElementById('audio1').currentTime;
-});
-document.getElementById('audio2').addEventListener('play', () => {
-    lastTime2 = document.getElementById('audio2').currentTime;
-});
-
-document.getElementById('audio1').addEventListener('timeupdate', () => {
-    const now = document.getElementById('audio1').currentTime;
-    if (Math.abs(now - lastTime1) > 2 && lastTime1 > 2) {
-        replayLog.push(`Part 1: ${formatTime(lastTime1)} → ${formatTime(now)}`);
-    }
-    lastTime1 = now;
-});
-
-document.getElementById('audio2').addEventListener('timeupdate', () => {
-    const now = document.getElementById('audio2').currentTime;
-    if (Math.abs(now - lastTime2) > 2 && lastTime2 > 2) {
-        replayLog.push(`Part 3: ${formatTime(lastTime2)} → ${formatTime(now)}`);
-    }
-    lastTime2 = now;
-});
 </script>
 </body>
 </html>
-
