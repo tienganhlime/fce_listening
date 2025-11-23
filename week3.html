@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Listening Week 3 - Trung Tâm Tiếng Anh LIME</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #81C784 100%); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #4CAF50; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .correct-answer { background-color: #C8E6C9 !important; border-color: #4CAF50 !important; }
+        .wrong-answer { background-color: #FFCDD2 !important; border-color: #F44336 !important; }
+        label span { font-size: 20px; }
+        #instructions p, .text-sm { font-size: 20px !important; }
+    </style>
+</head>
+<body>
+
+<!-- THAY URL WEB APP CỦA BẠN VÀO ĐÂY (chỉ thay 1 lần, dùng chung cho mọi tuần) -->
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';
+    const WEEK_NUMBER = 3;
+</script>
+
+<!-- MÀN HÌNH NHẬP MÃ -->
+<div id="codeScreen" class="min-h-screen p-4 fade-in">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mt-8">
+            <div class="text-center mb-8">
+                <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME Logo" class="w-32 h-32 mx-auto mb-4 object-contain">
+                <h1 class="text-4xl font-bold text-green-700 mb-2">Trung Tâm Tiếng Anh LIME</h1>
+                <p class="text-green-600 text-lg">Hotline: 0976222792</p>
+                <div class="mt-4 h-1 w-32 bg-green-500 mx-auto rounded"></div>
+            </div>
+            
+            <div class="bg-green-50 rounded-xl p-6 mb-6">
+                <h2 class="text-2xl font-bold text-green-800 mb-4">FCE LISTENING - WEEK 3</h2>
+                <div class="space-y-2 text-green-700">
+                    <p>Part 1: Multiple Choice (8 câu)</p>
+                    <p>Part 2: Sentence Completion (10 câu)</p>
+                    <p>Audio có thể tạm dừng/nghe lại</p>
+                    <p>Chấm điểm tự động</p>
+                    <p>Theo dõi tiến độ học tập</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-6">
+                <div class="flex items-start gap-2">
+                    <svg class="w-6 h-6 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div class="text-yellow-800 text-sm">
+                        <p class="font-bold mb-1">Lưu ý quan trọng:</p>
+                        <p>• Có thể tua/dừng/nghe lại audio</p>
+                        <p>• Hệ thống ghi nhận lần nghe lại & chuyển tab</p>
+                        <p>• Có thể làm lại nhiều lần</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-green-800 font-semibold mb-2">Mã học sinh *</label>
+                <input type="text" id="studentCode" class="w-full px-4 py-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none uppercase" placeholder="VD: HS001">
+            </div>
+
+            <button onclick="verifyStudent()" class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition duration-300 text-lg shadow-lg">
+                XÁC NHẬN & BẮT ĐẦU
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MÀN HÌNH LÀM BÀI -->
+<div id="testScreen" class="hidden min-h-screen p-4 pb-32">
+    <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6 sticky top-4 z-10">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME Logo" class="w-12 h-12 object-contain">
+                    <div>
+                        <h1 class="text-2xl font-bold text-green-700">FCE Listening - Week 3</h1>
+                        <p class="text-green-600 text-sm">Part 1 & 2</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-600">Học sinh: <span id="headerName"></span></p>
+                    <p class="text-sm text-gray-600">Mã: <span id="headerCode"></span></p>
+                    <p class="text-sm text-gray-600">Thời gian: <span id="timerDisplay">00:00</span></p>
+                    <p class="text-sm text-red-600" id="tabSwitchWarning" style="display:none;">Chuyển tab: <span id="tabSwitchCount">0</span> lần</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Tiến độ: <span id="progress">0</span>/18 câu</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-green-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 1 -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
+            <div class="bg-blue-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
+                <h2 class="text-2xl font-bold">PART 1 - Multiple Choice</h2>
+                <p class="text-sm opacity-90">Questions 1-8</p>
+            </div>
+
+            <div class="bg-green-50 rounded-xl p-6 mb-8">
+                <audio id="audio1" controls class="w-full" ontimeupdate="trackReplay(1)" onplay="startTracking(1)" onseeked="logReplay(1)">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894834/COMPLETE_FIRST_fS_WB_007_qzivks.mp3" type="audio/mpeg">
+                    Trình duyệt không hỗ trợ audio.
+                </audio>
+                <p class="text-sm text-gray-600 mt-2">Có thể tua/dừng/nghe lại tự do</p>
+            </div>
+
+            <div class="space-y-8 text-lg">
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">1. You hear a man giving career advice to a group of teenagers. How does he feel about the advice he was given when he was young?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q1" value="A"> A happy that he was helped</label><br>
+                        <label><input type="radio" name="q1" value="B"> B happy that he was advised to do something he enjoyed</label><br>
+                        <label><input type="radio" name="q1" value="C"> C happy that he was independent in his choice of career</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">2. You hear a girl being interviewed for a part-time job at a café. What does the woman think about the girl?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q2" value="A"> A She likes her approach.</label><br>
+                        <label><input type="radio" name="q2" value="B"> B She doesn’t have enough experience.</label><br>
+                        <label><input type="radio" name="q2" value="C"> C She is very polite.</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">3. You hear a teacher talking to his students about their work experience week. He is</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q3" value="A"> A making preparations.</label><br>
+                        <label><input type="radio" name="q3" value="B"> B giving advice.</label><br>
+                        <label><input type="radio" name="q3" value="C"> C making an offer.</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">4. You hear a teenager interviewing a man about his job. What is the man’s job?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q4" value="A"> A a police officer</label><br>
+                        <label><input type="radio" name="q4" value="B"> B a doctor</label><br>
+                        <label><input type="radio" name="q4" value="C"> C a firefighter</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">5. You hear two teenagers talking about their summer job working at an ice cream stall. Why does the girl not want the boy to go to the shop?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q5" value="A"> A It isn’t essential.</label><br>
+                        <label><input type="radio" name="q5" value="B"> B There are many people waiting to be served.</label><br>
+                        <label><input type="radio" name="q5" value="C"> C They are getting more stock tomorrow.</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">6. You hear a man leave a message on an answering machine. Which candidate was chosen for the job originally advertised?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q6" value="A"> A someone who performed better at the interview</label><br>
+                        <label><input type="radio" name="q6" value="B"> B someone already working for the company</label><br>
+                        <label><input type="radio" name="q6" value="C"> C someone with better qualifications</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">7. You hear a teenage girl talking to her father about her first day at a new job. How does she feel?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q7" value="A"> A frustrated</label><br>
+                        <label><input type="radio" name="q7" value="B"> B hopeful</label><br>
+                        <label><input type="radio" name="q7" value="C"> C patient</label>
+                    </div>
+                </div>
+
+                <div class="pb-6">
+                    <p class="font-semibold mb-4">8. You hear a teenage boy talking to his boss. When has his boss agreed to give him time off?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q8" value="A"> A Saturday afternoon</label><br>
+                        <label><input type="radio" name="q8" value="B"> B the weekend</label><br>
+                        <label><input type="radio" name="q8" value="C"> C Saturday morning</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 2 -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
+            <div class="bg-purple-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
+                <h2 class="text-2xl font-bold">PART 2 - Sentence Completion</h2>
+                <p class="text-sm opacity-90">Questions 9-18</p>
+            </div>
+
+            <div class="bg-green-50 rounded-xl p-6 mb-8">
+                <audio id="audio2" controls class="w-full" ontimeupdate="trackReplay(2)" onplay="startTracking(2)" onseeked="logReplay(2)">
+                    <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894868/COMPLETE_FIRST_fS_SB_021_sfmb0v.mp3" type="audio/mpeg">
+                    Trình duyệt không hỗ trợ audio.
+                </audio>
+            </div>
+
+            <div class="space-y-7 text-lg leading-relaxed">
+                <p>9. Speaker 1 chose weekend work because it is <input type="text" id="q9" class="border-b-4 border-purple-400 w-72 text-center"></p>
+                <p>10. Speaker 2 says that working with a friend helps with <input type="text" id="q10" class="border-b-4 border-purple-400 w-72 text-center"></p>
+                <p>11. Speaker 3 enjoys the <input type="text" id="q11" class="border-b-4 border-purple-400 w-72 text-center"> of meeting new people.</p>
+                <p>12. Speaker 4 is saving money to buy something <input type="text" id="q12" class="border-b-4 border-purple-400 w-72 text-center">.</p>
+                <p>13. Speaker 5 finds the job useful for <input type="text" id="q13" class="border-b-4 border-purple-400 w-72 text-center"> experience.</p>
+                <p>14. Speaker 1 likes being able to choose exactly when to <input type="text" id="q14" class="border-b-4 border-purple-400 w-72 text-center">.</p>
+                <p>15. Speaker 2’s parents told him he had to do it. → <input type="text" id="q15" class="border-b-4 border-purple-400 w-72 text-center"></p>
+                <p>16. Speaker 3 says the job gives her the opportunity to make new <input type="text" id="q16" class="border-b-4 border-purple-400 w-72 text-center">.</p>
+                <p>17. Speaker 4 feels <input type="text" id="q17" class="border-b-4 border-purple-400 w-72 text-center"> about the job.</p>
+                <p>18. Speaker 5 says it is well <input type="text" id="q18" class="border-b-4 border-purple-400 w-72 text-center">.</p>
+            </div>
+        </div>
+
+        <button onclick="submitTest()" id="submitBtn" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-full text-xl shadow-2xl transition z-20">
+            NỘP BÀI
+        </button>
+    </div>
+</div>
+
+<!-- KẾT QUẢ -->
+<div id="resultScreen" class="hidden min-h-screen p-4 bg-gradient-to-br from-green-50 to-green-100">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-8 mt-8">
+        <h1 class="text-4xl font-bold text-green-700 text-center mb-8">KẾT QUẢ BÀI NGHE WEEK 3</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+            <div class="bg-blue-100 p-6 rounded-xl"><p class="text-sm text-blue-600">Điểm số</p><p class="text-3xl font-bold text-blue-800" id="resultScore">0%</p></div>
+            <div class="bg-green-100 p-6 rounded-xl"><p class="text-sm text-green-600">Số câu đúng</p><p class="text-3xl font-bold text-green-800" id="resultCorrect">0/18</p></div>
+            <div class="bg-purple-100 p-6 rounded-xl"><p class="text-sm text-purple-600">Thời gian làm</p><p class="text-3xl font-bold text-purple-800" id="resultTime">00:00</p></div>
+            <div class="bg-orange-100 p-6 rounded-xl"><p class="text-sm text-orange-600">Nghe lại</p><p class="text-3xl font-bold text-orange-800" id="resultTotalReplays">0 lần</p></div>
+        </div>
+
+        <div id="tabSwitchResult" class="hidden bg-red-100 border-2 border-red-400 rounded-xl p-6 mb-6 text-center text-red-800 font-bold text-lg">
+            <p id="tabSwitchResultText"></p>
+        </div>
+
+        <div class="bg-yellow-50 rounded-xl p-6 mb-6">
+            <p class="font-bold text-yellow-800 mb-3">Câu sai:</p>
+            <p class="text-2xl" id="wrongList">Không có</p>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl p-6 mb-6">
+            <p class="font-bold text-gray-800 mb-3">Chi tiết nghe lại:</p>
+            <div id="resultReplayLog" class="text-lg"></div>
+        </div>
+
+        <div id="reviewContainer" class="space-y-8"></div>
+
+        <div class="text-center mt-10">
+            <button onclick="location.reload()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-xl text-xl">
+                LÀM LẠI BÀI
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// =================== TOÀN BỘ SCRIPT GIỐNG WEEK2 (chỉ đổi WEEK_NUMBER) ===================
+let studentName = '', studentCode = '';
+let startTime, timerInterval, tabSwitchCount = 0, tabSwitchLog = [];
+let replayLog1 = [], replayLog2 = [], currentAudio = null, lastTime = 0;
+const answers = {};
+
+function verifyStudent() {
+    studentCode = document.getElementById('studentCode').value.trim().toUpperCase();
+    if (!studentCode) return alert('Vui lòng nhập mã học sinh!');
+    fetch(`${SCRIPT_URL}?action=verify&code=${studentCode}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.exists) {
+                studentName = data.studentName;
+                document.getElementById('codeScreen').classList.add('hidden');
+                document.getElementById('testScreen').classList.remove('hidden');
+                document.getElementById('headerName').textContent = studentName;
+                document.getElementById('headerCode').textContent = studentCode;
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 1000);
+                setupTabSwitchDetection();
+            } else {
+                alert('Mã học sinh không tồn tại! Vui lòng kiểm tra lại.');
+            }
+        });
+}
+
+function updateTimer() {
+    const now = new Date();
+    const diff = Math.floor((now - startTime) / 1000);
+    const m = String(Math.floor(diff / 60)).padStart(2, '0');
+    const s = String(diff % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    updateProgress();
+}
+
+function updateProgress() {
+    let filled = 0;
+    for (let i = 1; i <= 18; i++) if (answers[i]) filled++;
+    document.getElementById('progress').textContent = filled;
+    document.getElementById('progressPercent').textContent = Math.round((filled / 18) * 100) + '%';
+    document.getElementById('progressBar').style.width = (filled / 18) * 100 + '%';
+}
+
+function setupTabSwitchDetection() {
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            tabSwitchCount++;
+            tabSwitchLog.push(new Date().toLocaleTimeString());
+            document.getElementById('tabSwitchWarning').style.display = 'block';
+            document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
+        }
+    });
+}
+
+function startTracking(part) { currentAudio = part; lastTime = document.getElementById(`audio${part}`).currentTime; }
+function trackReplay(part) { /* không dùng nữa */ }
+function logReplay(part) {
+    const audio = document.getElementById(`audio${part}`);
+    const now = audio.currentTime;
+    if (Math.abs(now - lastTime) > 2) {
+        const direction = now < lastTime ? 'TUA LẠI' : 'TUA TỚI';
+        const log = { from: fmt(lastTime), to: fmt(now), direction };
+        (part === 1 ? replayLog1 : replayLog2).push(log);
+    }
+    lastTime = now;
+}
+function fmt(sec) {
+    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function submitTest() {
+    if (!confirm('Bạn chắc chắn muốn nộp bài?')) return;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner mr-3"></span>Đang chấm...';
+
+    // Lưu đáp án
+    for (let i = 1; i <= 8; i++) {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        answers[i] = sel ? sel.value : '';
+    }
+    for (let i = 9; i <= 18; i++) answers[i] = document.getElementById(`q${i}`).value.trim();
+
+    const timeUsed = document.getElementById('timerDisplay').textContent;
+
+    const payload = {
+        action: 'grade',
+        weekNumber: WEEK_NUMBER,
+        studentCode,
+        answers: JSON.stringify(answers),
+        timestamp: new Date().toLocaleString('vi-VN'),
+        timeUsed,
+        replayCount: replayLog1.length + replayLog2.length,
+        replayCountPart1: replayLog1.length,
+        replayCountPart2: replayLog2.length,
+        replayLog: JSON.stringify([...replayLog1, ...replayLog2].map(l => `Part${currentAudio||''} - ${l.direction} ${l.from}→${l.to}`)).slice(0, 900),
+        tabSwitchCount,
+        tabSwitchLog: tabSwitchLog.join(' | ')
+    };
+
+    fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+        .then(r => r.json())
+        .then(res => {
+            clearInterval(timerInterval);
+            showResults(res.correctCount||0, res.score||0, timeUsed, res.wrongQuestions||[], res.correctQuestions||[], replayLog1.length + replayLog2.length);
+        })
+        .catch(err => { alert('Lỗi kết nối!'); btn.disabled = false; btn.innerHTML = 'NỘP BÀI'; });
+}
+
+function showResults(correctCount, totalScore, timeUsed, wrongQuestions, correctQuestions, totalReplayCount) {
+    document.getElementById('testScreen').classList.add('hidden');
+    document.getElementById('resultScreen').classList.remove('hidden');
+    document.getElementById('resultScore').textContent = totalScore + '%';
+    document.getElementById('resultCorrect').textContent = correctCount + '/18';
+    document.getElementById('resultTime').textContent = timeUsed;
+    document.getElementById('resultTotalReplays').textContent = totalReplayCount + ' lần';
+    document.getElementById('wrongList').textContent = wrongQuestions.length > 0 ? `Câu số: ${wrongQuestions.join(', ')}` : 'Hoàn hảo! Không sai câu nào';
+
+    if (tabSwitchCount > 0) {
+        document.getElementById('tabSwitchResult').classList.remove('hidden');
+        document.getElementById('tabSwitchResultText').innerHTML = `Đã chuyển tab <strong>${tabSwitchCount} lần</strong> trong quá trình làm bài.<br>Thông tin đã được ghi nhận.`;
+    }
+
+    let logHtml = '';
+    if (replayLog1.length) logHtml += `<div class="mb-4 p-3 bg-blue-100 rounded-lg"><p class="font-bold text-blue-800">Part 1: ${replayLog1.length} lần</p>${replayLog1.map((l,i)=>`<p>• Lần ${i+1}: <strong>${l.direction}</strong> ${l.from} → ${l.to}</p>`).join('')}</div>`;
+    if (replayLog2.length) logHtml += `<div class="p-3 bg-purple-100 rounded-lg"><p class="font-bold text-purple-800">Part 2: ${replayLog2.length} lần</p>${replayLog2.map((l,i)=>`<p>• Lần ${i+1}: <strong>${l.direction}</strong> ${l.from} → ${l.to}</p>`).join('')}</div>`;
+    if (!logHtml) logHtml = '<p class="italic text-gray-600">Không nghe lại lần nào</p>';
+    document.getElementById('resultReplayLog').innerHTML = logHtml;
+
+    // Review
+    let review = '<h3 class="text-2xl font-bold text-blue-700 mb-6">Part 1 - Multiple Choice</h3>';
+    for (let i=1; i<=8; i++) {
+        const user = answers[i] || 'Bỏ trống';
+        const ok = correctQuestions.includes(i);
+        const bg = ok ? 'correct-answer' : 'wrong-answer';
+        review += `<div class="border-2 ${bg} rounded-xl p-6 mb-5"><div class="flex gap-4"><div class="w-12 h-12 ${ok?'bg-green-600':'bg-red-600'} text-white rounded-full flex items-center justify-center font-bold text-xl">${i}</div><div class="flex-1"><p class="font-semibold text-lg mb-2">Câu trả lời của bạn: <span class="${ok?'text-green-700':'text-red-700'} font-bold">${user}</span></p><p class="text-2xl font-bold ${ok?'text-green-600':'text-red-600'}">${ok?'ĐÚNG':'SAI'}</p></div></div></div>`;
+    }
+    review += '<h3 class="text-2xl font-bold text-purple-700 mt-10 mb-6">Part 2 - Sentence Completion</h3>';
+    for (let i=9; i<=18; i++) {
+        const user = answers[i] || 'Bỏ trống';
+        const ok = correctQuestions.includes(i);
+        const bg = ok ? 'correct-answer' : 'wrong-answer';
+        review += `<div class="border-2 ${bg} rounded-xl p-6 mb-5"><div class="flex gap-4"><div class="w-12 h-12 ${ok?'bg-green-600':'bg-red-600'} text-white rounded-full flex items-center justify-center font-bold text-xl">${i}</div><div class="flex-1"><p class="text-lg mb-2 font-semibold">Đáp án của bạn: <span class="${ok?'text-green-700':'text-red-700'} font-bold">${user}</span></p><p class="text-2xl font-bold ${ok?'text-green-600':'text-red-600'}">${ok?'ĐÚNG':'SAI'}</p></div></div></div>`;
+    }
+    document.getElementById('reviewContainer').innerHTML = review;
+}
+</script>
+</body>
+</html>
