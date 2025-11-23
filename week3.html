@@ -61,23 +61,20 @@ const WEEK_NUMBER = 3;
             </div>
         </div>
 
-       <!-- PART 1 -->
+        <!-- PART 1 -->
         <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
             <div class="bg-blue-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
-                <h2 class="text-2xl font-bold">PART 1 - Multiple Choice</h2>
-                <p class="text-sm opacity-90">Questions 1-8</p>
+                <h2 class="text-2xl font-bold">PART 1 - Multiple Choice (1-8)</h2>
             </div>
-
             <div class="bg-green-50 rounded-xl p-6 mb-8">
-                <audio id="audio1" controls class="w-full" ontimeupdate="trackReplay(1)" onplay="startTracking(1)" onseeked="logReplay(1)">
+                <audio id="audio1" controls class="w-full">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894834/COMPLETE_FIRST_fS_WB_007_qzivks.mp3" type="audio/mpeg">
-
                     Trình duyệt không hỗ trợ audio.
                 </audio>
                 <p class="text-sm text-gray-600 mt-2">Có thể tua/dừng/nghe lại tự do</p>
             </div>
-
             <div class="space-y-8 text-lg">
+                <!-- Câu 1-8 (giữ nguyên như bạn đã làm) -->
                 <div class="border-b-2 border-gray-200 pb-6">
                     <p class="font-semibold mb-4">1. You hear a man giving career advice to a group of teenagers. How does he feel about the advice he was given when he was young?</p>
                     <div class="space-y-3">
@@ -86,7 +83,6 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q1" value="C"> C happy that he was independent in his choice of career</label>
                     </div>
                 </div>
-
                 <div class="border-b-2 border-gray-200 pb-6">
                     <p class="font-semibold mb-4">2. You hear a girl being interviewed for a part-time job at a café. What does the woman think about the girl?</p>
                     <div class="space-y-3">
@@ -151,15 +147,16 @@ const WEEK_NUMBER = 3;
                 </div>
             </div>
         </div>
-        <!-- PART 3 – Multiple Matching (9–13) -->
+
+
+        <!-- PART 3 -->
         <div class="bg-white rounded-2xl shadow-2xl p-8">
             <div class="bg-purple-600 text-white p-4 rounded-t-xl -m-8 mb-6">
                 <h2 class="text-2xl font-bold">PART 3 – Multiple Matching (9–13)</h2>
             </div>
             <div class="bg-green-50 p-6 rounded-xl mb-8">
-                <audio id="audio2" controls class="w-full" onplay="startTracking(2)" onseeked="logReplay(2)">
+                <audio id="audio2" controls class="w-full">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894868/COMPLETE_FIRST_fS_SB_021_sfmb0v.mp3" type="audio/mpeg">
-
                 </audio>
             </div>
             <div class="bg-gray-100 p-6 rounded-xl mb-8 text-lg">
@@ -175,9 +172,7 @@ const WEEK_NUMBER = 3;
                     <div><strong>H</strong> It is well paid.</div>
                 </div>
             </div>
-
             <div class="space-y-8 text-lg">
-                <!-- Speaker 1 đến 5 (q9–q13) -->
                 <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 1</div>
                     <div class="flex flex-wrap gap-4">
@@ -191,7 +186,6 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q9" value="H"> H</label>
                     </div>
                 </div>
-                <!-- Speaker 2 (q10) -->
                 <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 2</div>
                     <div class="flex flex-wrap gap-4">
@@ -205,8 +199,7 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q10" value="H"> H</label>
                     </div>
                 </div>
-
- <div class="flex items-center gap-6 pb-6 border-b">
+                <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 3</div>
                     <div class="flex flex-wrap gap-4">
                         <label><input type="radio" name="q11" value="A"> A</label>
@@ -219,7 +212,7 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q11" value="H"> H</label>
                     </div>
                 </div>
- <div class="flex items-center gap-6 pb-6 border-b">
+                <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 4</div>
                     <div class="flex flex-wrap gap-4">
                         <label><input type="radio" name="q12" value="A"> A</label>
@@ -232,7 +225,7 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q12" value="H"> H</label>
                     </div>
                 </div>
- <div class="flex items-center gap-6 pb-6 border-b">
+                <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 5</div>
                     <div class="flex flex-wrap gap-4">
                         <label><input type="radio" name="q13" value="A"> A</label>
@@ -245,10 +238,8 @@ const WEEK_NUMBER = 3;
                         <label><input type="radio" name="q13" value="H"> H</label>
                     </div>
                 </div>
-
             </div>
         </div>
-
 
         <button onclick="submitTest()" id="submitBtn" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-2xl shadow-2xl z-20">
             NỘP BÀI
@@ -256,7 +247,7 @@ const WEEK_NUMBER = 3;
     </div>
 </div>
 
-<!-- MÀN HÌNH KẾT QUẢ ĐẸP -->
+<!-- MÀN HÌNH KẾT QUẢ -->
 <div id="resultScreen" class="hidden min-h-screen p-6 bg-gradient-to-br from-green-50 to-blue-50">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-10 mt-10">
         <h1 class="text-5xl font-bold text-green-700 text-center mb-8">KẾT QUẢ WEEK 3</h1>
@@ -279,9 +270,14 @@ const WEEK_NUMBER = 3;
             </div>
         </div>
 
-        <div id="tabSwitchDetails" class="bg-red-50 border border-red-300 rounded-xl p-6 mb-8 hidden">
-            <p class="font-bold text-red-700 mb-3">Chi tiết chuyển tab:</p>
-            <div id="tabSwitchList" class="text-red-600 font-mono"></div>
+        <div id="tabSwitchDetails" class="bg-red-50 border border-red-300 rounded-xl p-6 mb-6 hidden">
+            <p class="font-bold text-red-700 mb-2">Chi tiết chuyển tab:</p>
+            <div id="tabSwitchList" class="text-red-600 font-mono text-sm"></div>
+        </div>
+
+        <div id="replayDetails" class="bg-pink-50 border border-pink-300 rounded-xl p-6 mb-6 hidden">
+            <p class="font-bold text-pink-700 mb-2">Chi tiết tua lại audio:</p>
+            <div id="replayList" class="text-pink-600 font-mono text-sm"></div>
         </div>
 
         <div class="bg-yellow-50 rounded-xl p-6">
@@ -299,9 +295,10 @@ const WEEK_NUMBER = 3;
 
 <script>
 let studentName = '', studentCode = '', startTime, timerInterval;
-let tabSwitchCount = 0, tabSwitchLog = []; // [{start: 120, end: 135}, ...]
+let tabSwitchCount = 0, tabSwitchLog = [];
 let currentSwitchStart = null;
 let lastTime1 = 0, lastTime2 = 0;
+let replayLog = [];  // sẽ được gán lại trong DOMContentLoaded
 const answers = {};
 
 function verifyStudent() {
@@ -313,27 +310,30 @@ function verifyStudent() {
             if (data.exists) {
                 studentName = data.studentName;
                 document.getElementById('codeScreen').classList.add('hidden');
-               document.getElementById('testScreen').classList.remove('hidden');
+                document.getElementById('testScreen').classList.remove('hidden');
                 document.getElementById('headerName').textContent = studentName;
                 document.getElementById('headerCode').textContent = studentCode;
                 startTime = new Date();
                 timerInterval = setInterval(updateTimer, 1000);
 
-                // THEO DÕI CHUYỂN TAB CHI TIẾT
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden) {
-                        currentSwitchStart = Math.floor((new Date() - startTime) / 1000);
-                    } else if (currentSwitchStart !== null) {
-                        const end = Math.floor((new Date() - startTime) / 1000);
-                        tabSwitchCount++;
-                        tabSwitchLog.push({start: currentSwitchStart, end: end});
-                        currentSwitchStart = null;
-                        document.getElementById('tabSwitchWarning').classList.remove('hidden');
-                        document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
-                    }
-                });
-            } else alert('Mã không tồn tại!');
+                document.addEventListener('visibilitychange', handle-visibility);
+            } else {
+                alert('Mã không tồn tại!');
+            }
         });
+}
+
+function handleVisibility() {
+    if (document.hidden) {
+        currentSwitchStart = Math.floor((new Date() - startTime) / 1000);
+    } else if (currentSwitchStart !== null) {
+        const end = Math.floor((new Date() - startTime) / 1000);
+        tabSwitchCount++;
+        tabSwitchLog.push({start: currentSwitchStart, end});
+        currentSwitchStart = null;
+        document.getElementById('tabSwitchWarning').classList.remove('hidden');
+        document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
+    }
 }
 
 function formatTime(sec) {
@@ -358,10 +358,6 @@ function updateProgress() {
     document.getElementById('progressBar').style.width = (filled / 13 * 100) + '%';
 }
 
-// Audio tracking (đã sửa lỗi)
-function startTracking(part) { /* không cần làm gì */ }
-function logReplay(part) { /* không cần làm gì */ }
-
 function submitTest() {
     if (!confirm('Nộp bài luôn nhé?')) return;
     document.getElementById('submitBtn').disabled = true;
@@ -380,7 +376,9 @@ function submitTest() {
         timestamp: new Date().toLocaleString('vi-VN'),
         timeUsed: document.getElementById('timerDisplay').textContent,
         tabSwitchCount,
-        tabSwitchLog: JSON.stringify(tabSwitchLog)
+        tabSwitchLog: JSON.stringify(tabSwitchLog),
+        replayCount: replayLog.length,
+        replayLog: replayLog.join(' | ')
     };
 
     fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
@@ -397,17 +395,49 @@ function submitTest() {
 
             if (tabSwitchCount > 0) {
                 document.getElementById('tabSwitchDetails').classList.remove('hidden');
-                const list = tabSwitchLog.map((log, i) => 
-                    `Lần ${i+1}: từ ${formatTime(log.start)} → ${formatTime(log.end)}`
-                ).join('<br>');
+                const list = tabSwitchLog.map((l, i) => `Lần ${i+1}: từ ${formatTime(l.start)} → ${formatTime(l.end)}`).join('<br>');
                 document.getElementById('tabSwitchList').innerHTML = list;
             }
 
-            if (res.wrongQuestions.length > 0) {
+            if (replayLog.length > 0) {
+                document.getElementById('replayDetails').classList.remove('hidden');
+                document.getElementById('replayList').innerHTML = replayLog.join('<br>');
+            }
+
+            if (res.wrongQuestions && res.wrongQuestions.length > 0) {
                 document.getElementById('wrongList').innerHTML = 'Câu: ' + res.wrongQuestions.join(', ');
             }
         });
 }
+
+// Track tua lại audio – chỉ chạy khi DOM đã load xong
+document.addEventListener('DOMContentLoaded', () => {
+    replayLog = []; // reset mỗi lần load trang
+
+    const a1 = document.getElementById('audio1');
+    const a2 = document.getElementById('audio2');
+
+    if (a1) {
+        a1.addEventListener('play', () => lastTime1 = a1.currentTime);
+        a1.addEventListener('timeupdate', () => {
+            const now = a1.currentTime;
+            if (Math.abs(now - lastTime1) > 2 && lastTime1 > 2) {
+                replayLog.push(`Part 1: ${formatTime(lastTime1)} → ${formatTime(now)}`);
+            }
+            lastTime1 = now;
+        });
+    }
+    if (a2) {
+        a2.addEventListener('play', () => lastTime2 = a2.currentTime);
+        a2.addEventListener('timeupdate', () => {
+            const now = a2.currentTime;
+            if (Math.abs(now - lastTime2) > 2 && lastTime2 > 2) {
+                replayLog.push(`Part 3: ${formatTime(lastTime2)} → ${formatTime(now)}`);
+            }
+            lastTime2 = now;
+        });
+    }
+});
 </script>
 </body>
 </html>
