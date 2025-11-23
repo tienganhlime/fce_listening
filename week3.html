@@ -193,11 +193,11 @@
             </div>
         </div>
 
-        <!-- PART 2 -->
+               <!-- PART 3 - Multiple Matching (CHỈ 5 CÂU, đúng chuẩn FCE) -->
         <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
             <div class="bg-purple-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
-                <h2 class="text-2xl font-bold">PART 2 - Sentence Completion</h2>
-                <p class="text-sm opacity-90">Questions 9-18</p>
+                <h2 class="text-2xl font-bold">PART 3 - Multiple Matching</h2>
+                <p class="text-sm opacity-90">Questions 9–13</p>
             </div>
 
             <div class="bg-green-50 rounded-xl p-6 mb-8">
@@ -205,19 +205,95 @@
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894868/COMPLETE_FIRST_fS_SB_021_sfmb0v.mp3" type="audio/mpeg">
                     Trình duyệt không hỗ trợ audio.
                 </audio>
+                <p class="text-sm text-gray-600 mt-2">Có thể tua/dừng/nghe lại tự do</p>
             </div>
 
-            <div class="space-y-7 text-lg leading-relaxed">
-                <p>9. Speaker 1 chose weekend work because it is <input type="text" id="q9" class="border-b-4 border-purple-400 w-72 text-center"></p>
-                <p>10. Speaker 2 says that working with a friend helps with <input type="text" id="q10" class="border-b-4 border-purple-400 w-72 text-center"></p>
-                <p>11. Speaker 3 enjoys the <input type="text" id="q11" class="border-b-4 border-purple-400 w-72 text-center"> of meeting new people.</p>
-                <p>12. Speaker 4 is saving money to buy something <input type="text" id="q12" class="border-b-4 border-purple-400 w-72 text-center">.</p>
-                <p>13. Speaker 5 finds the job useful for <input type="text" id="q13" class="border-b-4 border-purple-400 w-72 text-center"> experience.</p>
-                <p>14. Speaker 1 likes being able to choose exactly when to <input type="text" id="q14" class="border-b-4 border-purple-400 w-72 text-center">.</p>
-                <p>15. Speaker 2’s parents told him he had to do it. → <input type="text" id="q15" class="border-b-4 border-purple-400 w-72 text-center"></p>
-                <p>16. Speaker 3 says the job gives her the opportunity to make new <input type="text" id="q16" class="border-b-4 border-purple-400 w-72 text-center">.</p>
-                <p>17. Speaker 4 feels <input type="text" id="q17" class="border-b-4 border-purple-400 w-72 text-center"> about the job.</p>
-                <p>18. Speaker 5 says it is well <input type="text" id="q18" class="border-b-4 border-purple-400 w-72 text-center">.</p>
+            <!-- Danh sách A–H -->
+            <div class="bg-gray-100 rounded-xl p-6 mb-8 text-lg">
+                <p class="font-bold text-gray-800 mb-4">Choose from the list (A–H) the reason each speaker gives for doing their weekend job.<br>Use the letters only once. There are three extra letters which you do not need to use.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><strong>A</strong> It is easy to do.</div>
+                    <div><strong>B</strong> It enables me to work alongside a friend.</div>
+                    <div><strong>C</strong> My parents told me I had to do it.</div>
+                    <div><strong>D</strong> It gives me the opportunity to make new friends.</div>
+                    <div><strong>E</strong> It may be useful for the career I’ve chosen to do.</div>
+                    <div><strong>F</strong> I’m saving up to buy something special.</div>
+                    <div><strong>G</strong> It enables me to choose exactly when I want to work.</div>
+                    <div><strong>H</strong> It is well paid.</div>
+                </div>
+            </div>
+
+            <!-- Chỉ 5 speakers = 5 câu (9–13) -->
+            <div class="space-y-8 text-lg">
+                <div class="flex items-center gap-6 pb-6 border-b">
+                    <div class="font-bold text-2xl w-32 text-purple-700">Speaker 1</div>
+                    <div class="flex gap-5 flex-wrap">
+                        <label class="font-semibold"><input type="radio" name="q9"  value="A"> A</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="B"> B</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="C"> C</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="D"> D</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="E"> E</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="F"> F</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="G"> G</label>
+                        <label class="font-semibold"><input type="radio" name="q9"  value="H"> H</label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pb-6 border-b">
+                    <div class="font-bold text-2xl w-32 text-purple-700">Speaker 2</div>
+                    <div class="flex gap-5 flex-wrap">
+                        <label class="font-semibold"><input type="radio" name="q10" value="A"> A</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="B"> B</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="C"> C</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="D"> D</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="E"> E</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="F"> F</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="G"> G</label>
+                        <label class="font-semibold"><input type="radio" name="q10" value="H"> H</label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pb-6 border-b">
+                    <div class="font-bold text-2xl w-32 text-purple-700">Speaker 3</div>
+                    <div class="flex gap-5 flex-wrap">
+                        <label class="font-semibold"><input type="radio" name="q11" value="A"> A</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="B"> B</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="C"> C</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="D"> D</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="E"> E</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="F"> F</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="G"> G</label>
+                        <label class="font-semibold"><input type="radio" name="q11" value="H"> H</label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pb-6 border-b">
+                    <div class="font-bold text-2xl w-32 text-purple-700">Speaker 4</div>
+                    <div class="flex gap-5 flex-wrap">
+                        <label class="font-semibold"><input type="radio" name="q12" value="A"> A</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="B"> B</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="C"> C</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="D"> D</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="E"> E</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="F"> F</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="G"> G</label>
+                        <label class="font-semibold"><input type="radio" name="q12" value="H"> H</label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <div class="font-bold text-2xl w-32 text-purple-700">Speaker 5</div>
+                    <div class="flex gap-5 flex-wrap">
+                        <label class="font-semibold"><input type="radio" name="q13" value="A"> A</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="B"> B</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="C"> C</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="D"> D</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="E"> E</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="F"> F</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="G"> G</label>
+                        <label class="font-semibold"><input type="radio" name="q13" value="H"> H</label>
+                    </div>
+                </div>
             </div>
         </div>
 
