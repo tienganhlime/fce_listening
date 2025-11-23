@@ -11,90 +11,75 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #4CAF50; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .correct-answer { background-color: #C8E6C9 !important; border-color: #4CAF50 !important; }
-        .wrong-answer { background-color: #FFCDD2 !important; border-color: #F44336 !important; }
     </style>
 </head>
 <body>
 
-<!-- THAY URL WEB APP CỦA BẠN VÀO ĐÂY (chỉ thay 1 lần) -->
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';   // ← thay ở đây
+    // THAY 1 LẦN DUY NHẤT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-TjOgHmqjHO3K_uDW7djeGQ4F85S1HDiTkAMVhZm2E21gaAQHSueFA-gvgoPLEzTb/exec';
     const WEEK_NUMBER = 3;
 </script>
 
 <!-- MÀN HÌNH NHẬP MÃ -->
 <div id="codeScreen" class="min-h-screen p-4 fade-in">
-    <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 mt-8">
-            <div class="text-center mb-8">
-                <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME Logo" class="w-32 h-32 mx-auto mb-4 object-contain">
-                <h1 class="text-4xl font-bold text-green-700 mb-2">Trung Tâm Tiếng Anh LIME</h1>
-                <p class="text-green-600 text-lg">Hotline: 0976222792</p>
-                <div class="mt-4 h-1 w-32 bg-green-500 mx-auto rounded"></div>
-            </div>
-            <div class="bg-green-50 rounded-xl p-6 mb-6">
-                <h2 class="text-2xl font-bold text-green-800 mb-4">FCE LISTENING - WEEK 3</h2>
-                <div class="space-y-2 text-green-700">
-                    <p>Part 1: Multiple Choice (8 câu)</p>
-                    <p>Part 3: Multiple Matching (5 câu)</p>
-                    <p>Tổng: 13 câu</p>
-                </div>
-            </div>
-            <div>
-                <label class="block text-green-800 font-semibold mb-2">Mã học sinh *</label>
-                <input type="text" id="studentCode" class="w-full px-4 py-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none uppercase" placeholder="VD: HS001">
-            </div>
-            <button onclick="verifyStudent()" class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg text-lg shadow-lg">
-                XÁC NHẬN & BẮT ĐẦU
-            </button>
-        </div>
+    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 mt-20 text-center">
+        <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME" class="w-32 h-32 mx-auto mb-4">
+        <h1 class="text-4xl font-bold text-green-700 mb-6">FCE Listening – Week 3</h1>
+        <input type="text" id="studentCode" class="w-full max-w-xs mx-auto px-4 py-3 border-2 border-green-400 rounded-lg text-center uppercase text-xl" placeholder="Mã học sinh">
+        <button onclick="verifyStudent()" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-xl text-xl">BẮT ĐẦU</button>
     </div>
 </div>
 
 <!-- MÀN HÌNH LÀM BÀI -->
 <div id="testScreen" class="hidden min-h-screen p-4 pb-32">
     <div class="max-w-5xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6 sticky top-4 z-10">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6 sticky top-0 z-10">
             <div class="flex justify-between items-center flex-wrap gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" alt="LIME Logo" class="w-12 h-12 object-contain">
+                <div class="flex items-center gap-4">
+                    <img src="https://gofirst.pro/images/uploads/62/baseimg/logo_16541442053.png" class="w-12 h-12">
                     <div>
-                        <h1 class="text-2xl font-bold text-green-700">FCE Listening - Week 3</h1>
-                        <p class="text-green-600 text-sm">Part 1 + Part 3</p>
+                        <h1 class="text-2xl font-bold text-green-700">FCE Listening – Week 3</h1>
+                        <p class="text-green-600">Part 1 + Part 3 (13 câu)</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-sm text-gray-600">Học sinh: <span id="headerName"></span></p>
-                    <p class="text-sm text-gray-600">Mã: <span id="headerCode"></span></p>
-                    <p class="text-sm text-gray-600">Thời gian: <span id="timerDisplay">00:00</span></p>
-                    <p class="text-sm text-red-600 hidden" id="tabSwitchWarning">Chuyển tab: <span id="tabSwitchCount">0</span> lần</p>
+                <div class="text-right text-sm">
+                    <p>Học sinh: <span id="headerName" class="font-bold"></span></p>
+                    <p>Mã: <span id="headerCode" class="font-bold"></span></p>
+                    <p>Thời gian: <span id="timerDisplay">00:00</span></p>
+                    <p id="tabSwitchWarning" class="text-red-600 font-bold hidden">
+                        Chuyển tab: <span id="tabSwitchCount">0</span> lần
+                    </p>
                 </div>
             </div>
             <div class="mt-4">
-                <div class="flex justify-between text-sm text-gray-600 mb-1">
-                    <span>Tiến độ: <span id="progress">0</span>/13 câu</span>
+                <div class="flex justify-between text-sm mb-1">
+                    <span>Tiến độ: <span id="progress">0</span>/13</span>
                     <span id="progressPercent">0%</span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div id="progressBar" class="bg-green-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+                <div class="w-full bg-gray-300 rounded-full h-3">
+                    <div id="progressBar" class="bg-green-600 h-3 rounded-full transition-all" style="width:0%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- PART 1 -->
+       <!-- PART 1 -->
         <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
             <div class="bg-blue-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
                 <h2 class="text-2xl font-bold">PART 1 - Multiple Choice</h2>
                 <p class="text-sm opacity-90">Questions 1-8</p>
             </div>
+
             <div class="bg-green-50 rounded-xl p-6 mb-8">
                 <audio id="audio1" controls class="w-full" ontimeupdate="trackReplay(1)" onplay="startTracking(1)" onseeked="logReplay(1)">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894834/COMPLETE_FIRST_fS_WB_007_qzivks.mp3" type="audio/mpeg">
+
+                    Trình duyệt không hỗ trợ audio.
                 </audio>
+                <p class="text-sm text-gray-600 mt-2">Có thể tua/dừng/nghe lại tự do</p>
             </div>
+
             <div class="space-y-8 text-lg">
-                <!-- Câu 1-8 giữ nguyên như cũ -->
                 <div class="border-b-2 border-gray-200 pb-6">
                     <p class="font-semibold mb-4">1. You hear a man giving career advice to a group of teenagers. How does he feel about the advice he was given when he was young?</p>
                     <div class="space-y-3">
@@ -103,6 +88,7 @@
                         <label><input type="radio" name="q1" value="C"> C happy that he was independent in his choice of career</label>
                     </div>
                 </div>
+
                 <div class="border-b-2 border-gray-200 pb-6">
                     <p class="font-semibold mb-4">2. You hear a girl being interviewed for a part-time job at a café. What does the woman think about the girl?</p>
                     <div class="space-y-3">
@@ -111,25 +97,75 @@
                         <label><input type="radio" name="q2" value="C"> C She is very polite.</label>
                     </div>
                 </div>
-                <!-- Câu 3-8 bạn giữ nguyên như file cũ -->
-                <!-- (để ngắn gọn mình bỏ bớt ở đây, bạn copy nguyên từ file cũ) -->
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">3. You hear a teacher talking to his students about their work experience week. He is</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q3" value="A"> A making preparations.</label><br>
+                        <label><input type="radio" name="q3" value="B"> B giving advice.</label><br>
+                        <label><input type="radio" name="q3" value="C"> C making an offer.</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">4. You hear a teenager interviewing a man about his job. What is the man’s job?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q4" value="A"> A a police officer</label><br>
+                        <label><input type="radio" name="q4" value="B"> B a doctor</label><br>
+                        <label><input type="radio" name="q4" value="C"> C a firefighter</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">5. You hear two teenagers talking about their summer job working at an ice cream stall. Why does the girl not want the boy to go to the shop?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q5" value="A"> A It isn’t essential.</label><br>
+                        <label><input type="radio" name="q5" value="B"> B There are many people waiting to be served.</label><br>
+                        <label><input type="radio" name="q5" value="C"> C They are getting more stock tomorrow.</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">6. You hear a man leave a message on an answering machine. Which candidate was chosen for the job originally advertised?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q6" value="A"> A someone who performed better at the interview</label><br>
+                        <label><input type="radio" name="q6" value="B"> B someone already working for the company</label><br>
+                        <label><input type="radio" name="q6" value="C"> C someone with better qualifications</label>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-6">
+                    <p class="font-semibold mb-4">7. You hear a teenage girl talking to her father about her first day at a new job. How does she feel?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q7" value="A"> A frustrated</label><br>
+                        <label><input type="radio" name="q7" value="B"> B hopeful</label><br>
+                        <label><input type="radio" name="q7" value="C"> C patient</label>
+                    </div>
+                </div>
+
+                <div class="pb-6">
+                    <p class="font-semibold mb-4">8. You hear a teenage boy talking to his boss. When has his boss agreed to give him time off?</p>
+                    <div class="space-y-3">
+                        <label><input type="radio" name="q8" value="A"> A Saturday afternoon</label><br>
+                        <label><input type="radio" name="q8" value="B"> B the weekend</label><br>
+                        <label><input type="radio" name="q8" value="C"> C Saturday morning</label>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- PART 3 - Multiple Matching (CHỈ 5 CÂU) -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
-            <div class="bg-purple-600 text-white px-6 py-3 rounded-t-xl -mx-8 -mt-8 mb-6">
-                <h2 class="text-2xl font-bold">PART 3 - Multiple Matching</h2>
-                <p class="text-sm opacity-90">Questions 9–13</p>
+        <!-- PART 3 – Multiple Matching (9–13) -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <div class="bg-purple-600 text-white p-4 rounded-t-xl -m-8 mb-6">
+                <h2 class="text-2xl font-bold">PART 3 – Multiple Matching (9–13)</h2>
             </div>
-            <div class="bg-green-50 rounded-xl p-6 mb-8">
-                <audio id="audio2" controls class="w-full" ontimeupdate="trackReplay(2)" onplay="startTracking(2)" onseeked="logReplay(2)">
+            <div class="bg-green-50 p-6 rounded-xl mb-8">
+                <audio id="audio2" controls class="w-full" onplay="startTracking(2)" onseeked="logReplay(2)">
                     <source src="https://res.cloudinary.com/dzby0c2up/video/upload/v1763894868/COMPLETE_FIRST_fS_SB_021_sfmb0v.mp3" type="audio/mpeg">
+
                 </audio>
             </div>
-
-            <div class="bg-gray-100 rounded-xl p-6 mb-8 text-lg">
-                <p class="font-bold text-gray-800 mb-4">Choose from the list (A–H) the reason each speaker gives for doing their weekend job.<br>Use the letters only once. There are three extra letters which you do not need to use.</p>
+            <div class="bg-gray-100 p-6 rounded-xl mb-8 text-lg">
+                <p class="font-bold mb-4">Choose from the list (A–H)… Use the letters only once. There are three extra letters.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><strong>A</strong> It is easy to do.</div>
                     <div><strong>B</strong> It enables me to work alongside a friend.</div>
@@ -143,115 +179,93 @@
             </div>
 
             <div class="space-y-8 text-lg">
+                <!-- Speaker 1 đến 5 (q9–q13) -->
                 <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 1</div>
-                    <div class="flex gap-5 flex-wrap">
-                        <label class="font-semibold"><input type="radio" name="q9" value="A"> A</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="B"> B</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="C"> C</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="D"> D</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="E"> E</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="F"> F</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="G"> G</label>
-                        <label class="font-semibold"><input type="radio" name="q9" value="H"> H</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label><input type="radio" name="q9" value="A"> A</label>
+                        <label><input type="radio" name="q9" value="B"> B</label>
+                        <label><input type="radio" name="q9" value="C"> C</label>
+                        <label><input type="radio" name="q9" value="D"> D</label>
+                        <label><input type="radio" name="q9" value="E"> E</label>
+                        <label><input type="radio" name="q9" value="F"> F</label>
+                        <label><input type="radio" name="q9" value="G"> G</label>
+                        <label><input type="radio" name="q9" value="H"> H</label>
                     </div>
                 </div>
+                <!-- Speaker 2 (q10) -->
                 <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 2</div>
-                    <div class="flex gap-5 flex-wrap">
-                        <label class="font-semibold"><input type="radio" name="q10" value="A"> A</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="B"> B</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="C"> C</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="D"> D</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="E"> E</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="F"> F</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="G"> G</label>
-                        <label class="font-semibold"><input type="radio" name="q10" value="H"> H</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label><input type="radio" name="q10" value="A"> A</label>
+                        <label><input type="radio" name="q10" value="B"> B</label>
+                        <label><input type="radio" name="q10" value="C"> C</label>
+                        <label><input type="radio" name="q10" value="D"> D</label>
+                        <label><input type="radio" name="q10" value="E"> E</label>
+                        <label><input type="radio" name="q10" value="F"> F</label>
+                        <label><input type="radio" name="q10" value="G"> G</label>
+                        <label><input type="radio" name="q10" value="H"> H</label>
                     </div>
                 </div>
-                <div class="flex items-center gap-6 pb-6 border-b">
+
+ <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 3</div>
-                    <div class="flex gap-5 flex-wrap">
-                        <label class="font-semibold"><input type="radio" name="q11" value="A"> A</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="B"> B</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="C"> C</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="D"> D</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="E"> E</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="F"> F</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="G"> G</label>
-                        <label class="font-semibold"><input type="radio" name="q11" value="H"> H</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label><input type="radio" name="q10" value="A"> A</label>
+                        <label><input type="radio" name="q10" value="B"> B</label>
+                        <label><input type="radio" name="q10" value="C"> C</label>
+                        <label><input type="radio" name="q10" value="D"> D</label>
+                        <label><input type="radio" name="q10" value="E"> E</label>
+                        <label><input type="radio" name="q10" value="F"> F</label>
+                        <label><input type="radio" name="q10" value="G"> G</label>
+                        <label><input type="radio" name="q10" value="H"> H</label>
                     </div>
                 </div>
-                <div class="flex items-center gap-6 pb-6 border-b">
+ <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 4</div>
-                    <div class="flex gap-5 flex-wrap">
-                        <label class="font-semibold"><input type="radio" name="q12" value="A"> A</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="B"> B</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="C"> C</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="D"> D</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="E"> E</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="F"> F</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="G"> G</label>
-                        <label class="font-semibold"><input type="radio" name="q12" value="H"> H</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label><input type="radio" name="q10" value="A"> A</label>
+                        <label><input type="radio" name="q10" value="B"> B</label>
+                        <label><input type="radio" name="q10" value="C"> C</label>
+                        <label><input type="radio" name="q10" value="D"> D</label>
+                        <label><input type="radio" name="q10" value="E"> E</label>
+                        <label><input type="radio" name="q10" value="F"> F</label>
+                        <label><input type="radio" name="q10" value="G"> G</label>
+                        <label><input type="radio" name="q10" value="H"> H</label>
                     </div>
                 </div>
-                <div class="flex items-center gap-6">
+ <div class="flex items-center gap-6 pb-6 border-b">
                     <div class="font-bold text-2xl w-32 text-purple-700">Speaker 5</div>
-                    <div class="flex gap-5 flex-wrap">
-                        <label class="font-semibold"><input type="radio" name="q13" value="A"> A</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="B"> B</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="C"> C</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="D"> D</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="E"> E</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="F"> F</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="G"> G</label>
-                        <label class="font-semibold"><input type="radio" name="q13" value="H"> H</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label><input type="radio" name="q10" value="A"> A</label>
+                        <label><input type="radio" name="q10" value="B"> B</label>
+                        <label><input type="radio" name="q10" value="C"> C</label>
+                        <label><input type="radio" name="q10" value="D"> D</label>
+                        <label><input type="radio" name="q10" value="E"> E</label>
+                        <label><input type="radio" name="q10" value="F"> F</label>
+                        <label><input type="radio" name="q10" value="G"> G</label>
+                        <label><input type="radio" name="q10" value="H"> H</label>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <button onclick="submitTest()" id="submitBtn" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-full text-xl shadow-2xl z-20">
+        <button onclick="submitTest()" id="submitBtn" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-16 rounded-full text-xl shadow-2xl z-20">
             NỘP BÀI
         </button>
     </div>
 </div>
 
-<!-- KẾT QUẢ (đã sửa đúng 13 câu) -->
-<div id="resultScreen" class="hidden min-h-screen p-4 bg-gradient-to-br from-green-50 to-green-100">
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-8 mt-8">
-        <h1 class="text-4xl font-bold text-green-700 text-center mb-8">KẾT QUẢ BÀI NGHE WEEK 3</h1>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
-            <div class="bg-blue-100 p-6 rounded-xl"><p class="text-sm text-blue-600">Điểm số</p><p class="text-3xl font-bold text-blue-800" id="resultScore">0%</p></div>
-            <div class="bg-green-100 p-6 rounded-xl"><p class="text-sm text-green-600">Số câu đúng</p><p class="text-3xl font-bold text-green-800" id="resultCorrect">0/13</p></div>
-            <div class="bg-purple-100 p-6 rounded-xl"><p class="text-sm text-purple-600">Thời gian</p><p class="text-3xl font-bold text-purple-800" id="resultTime">00:00</p></div>
-            <div class="bg-orange-100 p-6 rounded-xl"><p class="text-sm text-orange-600">Nghe lại</p><p class="text-3xl font-bold text-orange-800" id="resultTotalReplays">0 lần</p></div>
-        </div>
-        <div id="tabSwitchResult" class="hidden bg-red-100 border-2 border-red-400 rounded-xl p-6 mb-6 text-center text-red-800 font-bold text-lg">
-            <p id="tabSwitchResultText"></p>
-        </div>
-        <div class="bg-yellow-50 rounded-xl p-6 mb-6">
-            <p class="font-bold text-yellow-800 mb-3">Câu sai:</p>
-            <p class="text-2xl" id="wrongList">Không có</p>
-        </div>
-        <div id="reviewContainer" class="space-y-8"></div>
-        <div class="text-center mt-10">
-            <button onclick="location.reload()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-xl text-xl">
-                LÀM LẠI BÀI
-            </button>
-        </div>
-    </div>
-</div>
-
 <script>
-let studentName = '', studentCode = '';
-let startTime, timerInterval, tabSwitchCount = 0, tabSwitchLog = [];
-let replayLog1 = [], replayLog2 = [], lastTime = 0;
+let studentName = '', studentCode = '', startTime, timerInterval;
+let tabSwitchCount = 0, tabSwitchLog = [];
+let lastTime1 = 0, lastTime2 = 0;
 const answers = {};
 
 function verifyStudent() {
     studentCode = document.getElementById('studentCode').value.trim().toUpperCase();
-    if (!studentCode) return alert('Vui lòng nhập mã học sinh!');
+    if (!studentCode) return alert('Nhập mã học sinh!');
     fetch(`${SCRIPT_URL}?action=verify&code=${studentCode}`)
         .then(r => r.json())
         .then(data => {
@@ -263,6 +277,8 @@ function verifyStudent() {
                 document.getElementById('headerCode').textContent = studentCode;
                 startTime = new Date();
                 timerInterval = setInterval(updateTimer, 1000);
+
+                // BẮT CHUYỂN TAB
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
                         tabSwitchCount++;
@@ -271,8 +287,24 @@ function verifyStudent() {
                         document.getElementById('tabSwitchCount').textContent = tabSwitchCount;
                     }
                 });
-            } else alert('Mã học sinh không tồn tại!');
+            } else alert('Mã không tồn tại!');
         });
+}
+
+function startTracking(part) {
+    if (part === 1) lastTime1 = document.getElementById('audio1').currentTime;
+    if (part === 2) lastTime2 = document.getElementById('audio2').currentTime;
+}
+
+function logReplay(part) {
+    const audio = part === 1 ? document.getElementById('audio1') : document.getElementById('audio2');
+    const now = audio.currentTime;
+    const last = part === 1 ? lastTime1 : lastTime2;
+    if (Math.abs(now - last) > 2) {
+        // ghi log tua nếu cần
+    }
+    if (part === 1) lastTime1 = now;
+    else lastTime2 = now;
 }
 
 function updateTimer() {
@@ -285,33 +317,22 @@ function updateTimer() {
 
 function updateProgress() {
     let filled = 0;
-    for (let i = 1; i <= 13; i++) if (answers[i]) filled++;
+    for (let i = 1; i <= 13; i++) {
+        if (document.querySelector(`input[name="q${i}"]:checked`)) filled++;
+    }
     document.getElementById('progress').textContent = filled;
     document.getElementById('progressPercent').textContent = Math.round((filled / 13) * 100) + '%';
     document.getElementById('progressBar').style.width = (filled / 13 * 100) + '%';
 }
 
-function startTracking(part) { lastTime = document.getElementById(`audio${part}`).currentTime; }
-function logReplay(part) {
-    const audio = document.getElementById(`audio${part}`);
-    const now = audio.currentTime;
-    if (Math.abs(now - lastTime) > 2) {
-        const direction = now < lastTime ? 'TUA LẠI' : 'TUA TỚI';
-        (part === 1 ? replayLog1 : replayLog2).push({from: fmt(lastTime), to: fmt(now), direction});
-    }
-    lastTime = now;
-}
-function fmt(s) { const m = Math.floor(s/60).toString().padStart(2,'0'); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
-
 function submitTest() {
-    if (!confirm('Chắc chắn nộp bài?')) return;
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Đang chấm...';
+    if (!confirm('Nộp bài luôn nhé?')) return;
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('submitBtn').innerHTML = '<span class="spinner"></span>Đang chấm...';
 
-    // Lưu đáp án
     for (let i = 1; i <= 13; i++) {
         const sel = document.querySelector(`input[name="q${i}"]:checked`);
-        answers[i] = sel ? sel.value : '';
+        answers[i] = sel ? sel.value.toUpperCase() : '';
     }
 
     const payload = {
@@ -321,7 +342,6 @@ function submitTest() {
         answers: JSON.stringify(answers),
         timestamp: new Date().toLocaleString('vi-VN'),
         timeUsed: document.getElementById('timerDisplay').textContent,
-        replayCount: replayLog1.length + replayLog2.length,
         tabSwitchCount,
         tabSwitchLog: tabSwitchLog.join(' | ')
     };
@@ -330,17 +350,9 @@ function submitTest() {
         .then(r => r.json())
         .then(res => {
             clearInterval(timerInterval);
-            document.getElementById('testScreen').classList.add('hidden');
-            document.getElementById('resultScreen').classList.remove('hidden');
-            document.getElementById('resultScore').textContent = Math.round((res.correctCount / 13) * 100) + '%';
-            document.getElementById('resultCorrect').textContent = res.correctCount + '/13';
-            document.getElementById('resultTime').textContent = payload.timeUsed;
-            document.getElementById('resultTotalReplays').textContent = payload.replayCount + ' lần';
-            document.getElementById('wrongList').textContent = res.wrongQuestions.length ? 'Câu: ' + res.wrongQuestions.join(', ') : 'Hoàn hảo!';
-            if (tabSwitchCount > 0) {
-                document.getElementById('tabSwitchResult').classList.remove('hidden');
-                document.getElementById('tabSwitchResultText').textContent = `Đã chuyển tab ${tabSwitchCount} lần`;
-            }
+            alert(`Hoàn thành!\nĐúng ${res.correctCount}/13 câu (${Math.round(res.correctCount/13*100)}%)` + 
+                  (tabSwitchCount > 0 ? `\nChuyển tab: ${tabSwitchCount} lần` : ''));
+            location.reload();
         });
 }
 </script>
